@@ -1,3 +1,11 @@
 window.onload = function(){
-	alert("yes");
+	prog.run();
 };
+
+var prog = (function(){
+	return {
+		run: function(){
+			console.log("test");
+		}
+	};
+}());
