@@ -72,30 +72,28 @@
 
 		var util = (function(){
 			var point = function(x,y){
-				var self = this;
 
-				self.x = x ? x : 0;
-				self.y = y ? y : 0;
-				self.vx = -1;
-				self.vy = 1;
+				this.x = x ? x : 0;
+				this.y = y ? y : 0;
+				this.vx = -1;
+				this.vy = 1;
 
-				self.update = function(){
-					self.x += self.vx;
-					self.y += self.vy;
+				this.update = function(){
+					this.x += this.vx;
+					this.y += this.vy;
 				};
 			};
 
 			var square = function(point, w, h, clr){
-				var self = this;
-				self.w = w;
-				self.h = h;
+				this.w = w;
+				this.h = h;
 
-				self.point = point;
-				self.clr = clr;
-				self.draw = function(context){
-					context.fillStyle = self.clr;
+				this.point = point;
+				this.clr = clr;
+				this.draw = function(context){
+					context.fillStyle = this.clr;
 					context.beginPath();
-					context.rect(self.point.x, self.point.y, self.w, self.h);
+					context.rect(this.point.x, this.point.y, this.w, this.h);
 					context.closePath();
 					context.fill();
 				};
