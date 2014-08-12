@@ -1,3 +1,6 @@
+/*global window*/
+/*global document*/
+
 (function(){
 	(function(){
 		var onEachFrame;
@@ -5,16 +8,16 @@
 			onEachFrame = function(cb){
 				var _cb = function(){ cb(); window.webkitRequestAnimationFrame(_cb); };
 				_cb();
-			}
+			};
 		}else if(window.mozRequestAnimationFrame){
 			onEachFrame = function(cb){
 				var _cb = function(){ cb(); window.mozRequestAnimationFrame(_cb); };
 				_cb();
-			}
+			};
 		}else{
 			onEachFrame = function(cb){
-				setInterval(cb, 0);
-			}
+				window.setInterval(cb, 0);
+			};
 		}
 
 		window.onEachFrame = onEachFrame;
@@ -37,7 +40,7 @@
 				bctx = buffer.getContext('2d');
 				buffer.width = width;
 				buffer.height = height;
-			};
+			}
 
 			function clear(clr){
 				if(!clr) clr = "#efefef";
@@ -46,11 +49,11 @@
 				bctx.rect(0, 0, width, height);
 				bctx.closePath();
 				bctx.fill();
-			};
+			}
 
 			function draw(){
 				ctx.drawImage(buffer, 0, 0);
-			};
+			}
 
 			return {
 				"setup": setup,
@@ -60,11 +63,11 @@
 			};
 		}());
 
-
 		var x = 1;
+		var y = 1;
 
-		var init = function(){
-			canvas.setup(200,200, 'canvas');
+		var init = function(w,h){
+			canvas.setup(w,h, 'canvas');
 		};
 
 		var preupdate = function(){};
@@ -74,6 +77,7 @@
 			preupdate();
 			//update
 			x+=1;
+			y+=1;
 
 			postupdate();
 		};
@@ -82,7 +86,7 @@
 		var draw = function(){
 			canvas.ctx().fillStyle = "#831616";
 			canvas.ctx().beginPath();
-			canvas.ctx().rect(game.x, 25, 50, 50);
+			canvas.ctx().rect(x, y, 50, 50);
 			canvas.ctx().closePath();
 			canvas.ctx().fill();
 		};
@@ -92,11 +96,11 @@
 			var fps = 60;
 			var skipTicks = (1000 / fps);
 			var maxFrameSkip = 10;
-			var nextGameTick = (new Date).getTime();
+			var nextGameTick = (new Date()).getTime();
 
 			return function(){
 				loops = 0;
-				while((new Date).getTime() > nextGameTick && loops < maxFrameSkip){
+				while((new Date()).getTime() > nextGameTick && loops < maxFrameSkip){
 					update();
 					nextGameTick += skipTicks;
 					loops++;
@@ -114,15 +118,14 @@
 		};
 	}());
 
-	function init(){
-		game.init();
+	function init(w,h){
+		game.init(w,h);
 	}
 
 
 	window.onload = function(){
-		init();
-		game.run();
-		//window.onEachFrame(game.run);
-	}
+		init(400,400);
+		window.onEachFrame(game.run);
+	};
 
 }());
