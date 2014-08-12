@@ -85,50 +85,84 @@
 				};
 			};
 
+			var square = function(point, w, h, clr){
+				var self = this;
+				self.w = w;
+				self.h = h;
+
+				self.point = point;
+				self.clr = clr;
+				self.draw = function(context){
+					context.fillStyle = self.clr;
+					context.beginPath();
+					context.rect(self.point.x, self.point.y, self.w, self.h);
+					context.closePath();
+					context.fill();
+				};
+			};
+
 			return {
-				"point" : point
+				"point" : point,
+				"square": square
 			};
 		}());
 
-		var point = new util.point(25,73);
+		var entity = function(x, y, w, h){
+			var self = this;
+
+			self.point = new util.point(x, y);
+			self.square = new util.square(self.point, w, h, "#811616");
+			self.preupdate = function(){
+				if(self.point.x >= canvas.width() - self.square.w){
+					self.point.vx = -1;
+				}
+				if(self.point.x <= 0){
+					self.point.vx = 1;
+				}
+				if(self.point.y >= canvas.height() - self.square.h){
+					self.point.vy = -1;
+				}
+				if(self.point.y <= 0){
+					self.point.vy = 1;
+				}
+			};
+			self.postupdate = function(){};
+			self.update = function(){
+				self.preupdate();
+
+				self.point.update();
+
+				self.postupdate();
+			};
+
+			self.draw = function(context){
+				self.square.draw(context);
+			};
+		};
+
+		var entities = [];
+		entities.push(new entity(25,73,50,50));
+		entities.push(new entity(10,200,50,50));
 
 		var init = function(w,h){
 			canvas.setup(w,h, 'canvas');
 		};
 
-		var preupdate = function(){
-			if(point.x >= canvas.width()){
-				point.vx = -1;
-			}
-			if(point.x <= 0){
-				point.vx = 1;
-			}
-			if(point.y >= canvas.height()){
-				point.vy = -1;
-			}
-			if(point.y <= 0){
-				point.vy = 1;
-			}
-		};
-		var postupdate = function(){};
-
 		var update = function(){
-			preupdate();
-
 			//update
-			point.update();
-
-			postupdate();
+			for(var i = 0; i < entities.length; i++){
+				entities[i].update();
+			}
 		};
 
 
-		var draw = function(){
+		var draw = function(context){
 			canvas.clear();
-			canvas.ctx().fillStyle = "#831616";
-			canvas.ctx().beginPath();
-			canvas.ctx().rect(point.x, point.y, 50, 50);
-			canvas.ctx().closePath();
-			canvas.ctx().fill();
+
+			for(var i = 0; i < entities.length; i++){
+				entities[i].draw(context);
+			}
+
 			canvas.draw();
 		};
 
@@ -146,7 +180,7 @@
 					nextGameTick += skipTicks;
 					loops++;
 				}
-				draw();
+				draw(canvas.ctx());
 			};
 		}());
 
