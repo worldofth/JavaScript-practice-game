@@ -4,7 +4,12 @@
 (function(){
 	(function(){
 		var onEachFrame;
-		if(window.webkitRequestAnimationFrame){
+		if(window.requestAnimationFrame){
+			onEachFrame = function(cb){
+				var _cb = function(){ cb(); window.requestAnimationFrame(_cb); };
+				_cb();
+			};
+		}else if(window.webkitRequestAnimationFrame){
 			onEachFrame = function(cb){
 				var _cb = function(){ cb(); window.webkitRequestAnimationFrame(_cb); };
 				_cb();
@@ -43,7 +48,7 @@
 			}
 
 			function clear(clr){
-				if(!clr) clr = "#efefef";
+				if(!clr){ clr = "#efefef";}
 				bctx.fillStyle = clr;
 				bctx.beginPath();
 				bctx.rect(0, 0, width, height);
@@ -59,36 +64,72 @@
 				"setup": setup,
 				"clear": clear,
 				"draw": draw,
-				"ctx": function(){return bctx;}
+				"ctx": function(){return bctx;},
+				"width": function(){return width;},
+				"height": function(){return height;}
 			};
 		}());
 
-		var x = 1;
-		var y = 1;
+		var util = (function(){
+			var point = function(x,y){
+				var self = this;
+
+				self.x = x ? x : 0;
+				self.y = y ? y : 0;
+				self.vx = -1;
+				self.vy = 1;
+
+				self.update = function(){
+					self.x += self.vx;
+					self.y += self.vy;
+				};
+			};
+
+			return {
+				"point" : point
+			};
+		}());
+
+		var point = new util.point(25,73);
 
 		var init = function(w,h){
 			canvas.setup(w,h, 'canvas');
 		};
 
-		var preupdate = function(){};
+		var preupdate = function(){
+			if(point.x >= canvas.width()){
+				point.vx = -1;
+			}
+			if(point.x <= 0){
+				point.vx = 1;
+			}
+			if(point.y >= canvas.height()){
+				point.vy = -1;
+			}
+			if(point.y <= 0){
+				point.vy = 1;
+			}
+		};
 		var postupdate = function(){};
 
 		var update = function(){
 			preupdate();
+
 			//update
-			x+=1;
-			y+=1;
+			point.update();
 
 			postupdate();
 		};
 
 
 		var draw = function(){
+			canvas.clear();
 			canvas.ctx().fillStyle = "#831616";
 			canvas.ctx().beginPath();
-			canvas.ctx().rect(x, y, 50, 50);
+			canvas.ctx().rect(point.x, point.y, 50, 50);
 			canvas.ctx().closePath();
 			canvas.ctx().fill();
+			canvas.draw();
 		};
 
 		var run = (function(){
@@ -105,10 +146,7 @@
 					nextGameTick += skipTicks;
 					loops++;
 				}
-
-				canvas.clear();
 				draw();
-				canvas.draw();
 			};
 		}());
 
