@@ -43,6 +43,7 @@
 	}());
 
 	var game = {
+		_intervalId: 0,
 		fps: 60,
 		x: 1,
 		preupdate: function(){},
@@ -58,15 +59,16 @@
 			this.postupdate();
 		},
 
-		draw: function(ctx){
-			ctx.fillStyle = "#831616";
-			ctx.beginPath();
-			ctx.rect(this.x, 25, 50, 50);
-			ctx.closePath();
-			ctx.fill();
+		draw: function(){
+			canvas.ctx().fillStyle = "#831616";
+			canvas.ctx().beginPath();
+			canvas.ctx().rect(this.x, 25, 50, 50);
+			canvas.ctx().closePath();
+			canvas.ctx().fill();
 		},
 
 		run:(function(){
+			console.log("1");
 			var loops = 0,
 				skipTicks = 1000/ this.fps,
 				maxFrameSkip = 10,
@@ -80,7 +82,7 @@
 					loops++;
 				}
 				canvas.clear();
-				this.draw(canvas.ctx());
+				this.draw();
 				canvas.draw();
 			};
 		}())
@@ -93,7 +95,7 @@
 
 	window.onload = function(){
 		init();
-		game.intervalId = setInterval(game.run(), 1000);
+		game._intervalId = setInterval(game.run(), 0);
 	}
 
 }());
