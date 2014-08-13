@@ -80,19 +80,19 @@
 			return new Circle(this.x, this.y, this.radius, this.colour);
 		};
 
-//		var RoundRectangle = function(x, y, width, height, radius, colour){
-//			this.type = "RoundRectangle";
-//			this.colour = colour;
-//			this.x = x || 0;
-//			this.y = y || 0;
-//			this.width = width || 0;
-//			this.height = height || 0;
-//			this.radius = radius || 0;
-//		};
-//		RoundRectangle.prototype.constructor = RoundRectangle;
-//		RoundRectangle.prototype.clone = function(){
-//			return new RoundRectangle(this.x, this.y, this.width, this.height, this.radius, this.colour);
-//		};
+		var RoundRectangle = function(x, y, width, height, radius, colour){
+			this.type = "RoundRectangle";
+			this.colour = colour;
+			this.x = x || 0;
+			this.y = y || 0;
+			this.width = width || 0;
+			this.height = height || 0;
+			this.radius = radius || 0;
+		};
+		RoundRectangle.prototype.constructor = RoundRectangle;
+		RoundRectangle.prototype.clone = function(){
+			return new RoundRectangle(this.x, this.y, this.width, this.height, this.radius, this.colour);
+		};
 
 
 		return {
@@ -105,7 +105,7 @@
 			"Vec2" 		: Vec2,
 			"Rectangle"	: Rectangle,
 			"Circle"	: Circle,
-			//"RoundRectangle": RoundRectangle
+			"RoundRectangle": RoundRectangle
 		};
 	}());
 
@@ -190,9 +190,32 @@
 					this.bufferContext.fillStyle = this.data.colour;
 					this.bufferContext.fill();
 				}
-//				else if(this.data.type === "RoundRectangle"){
-//
-//				}
+				else if(this.data.type === util.type_rrec){
+					var rx = this.data.x;
+					var ry = this.data.y;
+					var width = this.data.width;
+					var height = this.data.height;
+					var radius = this.data.radius;
+
+					var maxRadius = Math.min(width, height) /2 | 0;
+					radius = radius > maxRadius ? maxRadius : radius;
+
+					this.bufferContext.beginPath();
+					this.bufferContext.moveTo(rx, ry + radius);
+					this.bufferContext.lineTo(rx, ry + height - radius);
+					this.bufferContext.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
+					this.bufferContext.lineTo(rx + width - radius, ry + height);
+					this.bufferContext.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
+					this.bufferContext.lineTo(rx + width, ry + radius);
+					this.bufferContext.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
+					this.bufferContext.lineTo(rx + radius, ry);
+					this.bufferContext.quadraticCurveTo(rx, ry, rx, ry + radius);
+					this.bufferContext.closePath();
+
+					this.bufferContext.fillStyle = this.data.colour;
+					this.bufferContext.fill();
+
+				}
 			}
 		};
 
@@ -202,15 +225,17 @@
 		var canvas = new Canvas();
 
 		var	init = function(){
-			entities.push(new Entity(new util.Circle(25,550,25,'#821616'), 3));
-			entities.push(new Entity(new util.Circle(67,543,25,'#821616'), 2));
-			entities.push(new Entity(new util.Circle(63,73,25,'#821616'), 4));
-			entities.push(new Entity(new util.Circle(125,123,25,'#821616'), 6));
+			var speed = 3;
+			entities.push(new Entity(new util.Circle(25,550,25,'#821616'), speed));
+			entities.push(new Entity(new util.Circle(67,543,25,'#821616'), speed));
+			entities.push(new Entity(new util.Circle(63,73,25,'#821616'), speed));
+			entities.push(new Entity(new util.Circle(125,123,25,'#821616'), speed));
 
-			entities.push(new Entity(new util.Rectangle(225,410,50,50,'#821616'), 1));
-			entities.push(new Entity(new util.Rectangle(350,354,50,50,'#821616'), 3));
-			entities.push(new Entity(new util.Rectangle(75,432,50,50,'#821616'), 8));
-			entities.push(new Entity(new util.Rectangle(140,200,50,50,'#821616'), 4));
+			entities.push(new Entity(new util.Rectangle(225,410,50,50,'#821616'), speed));
+			entities.push(new Entity(new util.Rectangle(350,354,50,50,'#821616'), speed));
+
+			entities.push(new Entity(new util.RoundRectangle(75,432,50,50,10,'#821616'), speed));
+			entities.push(new Entity(new util.RoundRectangle(140,200,50,50,10,'#821616'), speed));
 		};
 
 		var	preUpdate = function(){
