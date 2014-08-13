@@ -36,157 +36,176 @@
 	};
 
 	var util = (function(){
-		function Vec2(x,y){
-			this.x = x;
-			this.y = y;
+		var Vec2 = function(x,y){
+			this.x = x || 0;
+			this.y = y || 0;
 			this.vx = 0;
 			this.vy = 0;
+		};
 
-			this.update = function(){
-				this.x += this.vx;
-				this.y += this.vy;
-			};
-		}
+		Vec2.prototype.update = function(){
+			this.x += this.vx;
+			this.y += this.vy;
+		};
 
-		var drawUtil = (function(){
-			function Square(vec2, w, h, clr){
-				this.w = w;
-				this.h = h;
+		Vec2.prototype.clone = function(){
+			return new Vec2(this.x, this.y);
+		};
 
-				this.vec2 = vec2;
-				this.clr = clr;
-				this.draw = function(context){
-					context.fillStyle = this.clr;
-					context.beginPath();
-					context.rect(this.vec2.x, this.vec2.y, this.w, this.h);
-					context.closePath();
-					context.fill();
-				};
-			}
+		Vec2.prototype.constructor = Vec2;
 
-			function Circle(vec2, radius, clr){
-				this.vec2 = vec2;
-				this.radius = radius;
-				this.clr = clr;
+		var Rectangle = function(x, y, width, height, colour){
+			this.type = "Rectangle";
+			this.colour = colour;
+			this.x = x || 0;
+			this.y = y || 0;
+			this.width = width || 0;
+			this.height = height || 0;
+		};
+		Rectangle.prototype.constructor = Rectangle;
+		Rectangle.prototype.clone = function(){
+			return new Rectangle(this.x, this.y, this.width, this.height, this.colour);
+		};
 
-				this.draw = function(context){
-					context.fillStyle = this.clr;
-					context.beginPath();
-					context.arc(this.vec2.x, this.vec2.y, this.radius, 2*Math.PI);
-					context.closePath();
-					context.fill();
-				};
-			}
+		var Circle = function(x, y, radius, colour){
+			this.type = "Circle";
+			this.colour = colour;
+			this.x = x || 0;
+			this.y = y || 0;
+			this.radius = radius || 0;
+			this.width = this.radius;
+			this.height = this.radius;
+		};
+		Circle.prototype.constructor = Circle;
+		Circle.prototype.clone = function(){
+			return new Circle(this.x, this.y, this.radius, this.colour);
+		};
 
-			function renderText(ctx, string, font, color, vec2){
-				ctx.fillStyle = color;
-				ctx.font = font;
-				ctx.fillText(string, vec2.x, vec2.y);
-			}
+//		var RoundRectangle = function(x, y, width, height, radius, colour){
+//			this.type = "RoundRectangle";
+//			this.colour = colour;
+//			this.x = x || 0;
+//			this.y = y || 0;
+//			this.width = width || 0;
+//			this.height = height || 0;
+//			this.radius = radius || 0;
+//		};
+//		RoundRectangle.prototype.constructor = RoundRectangle;
+//		RoundRectangle.prototype.clone = function(){
+//			return new RoundRectangle(this.x, this.y, this.width, this.height, this.radius, this.colour);
+//		};
 
-			return {
-				"Square": Square,
-				"Circle": Circle,
-				"renderText": renderText
-			};
-		}());
 
 		return {
 			"Vec2" : Vec2,
-			"drawUtil": drawUtil
+			"Rectangle": Rectangle,
+			"Circle": Circle,
+			//"RoundRectangle": RoundRectangle
 		};
 	}());
 
-	var Entity = function(x, y, w, h, speed){
+	var Entity = function(graphicsObject, speed){
+		this.vx = -speed;
+		this.vy = speed;
 		this.speed = speed;
-		this.vec2 = new util.Vec2(x, y);
-		this.vec2.vx = -speed;
-		this.vec2.vy = speed;
-		this.square = new util.drawUtil.Square(this.vec2, w, h, "#811616");
-
-		this.preupdate = function(){
-			if(this.vec2.x >= settings.width - this.square.w){
-				this.vec2.vx = -this.speed;
-			}
-			if(this.vec2.x <= 0){
-				this.vec2.vx = this.speed;
-			}
-			if(this.vec2.y >= settings.height - this.square.h){
-				this.vec2.vy = -this.speed;
-			}
-			if(this.vec2.y <= 0){
-				this.vec2.vy = this.speed;
-			}
-		};
-		this.postupdate = function(){};
-		this.update = function(){
-			this.preupdate();
-
-			this.vec2.update();
-
-			this.postupdate();
-		};
-
-		this.draw = function(context){
-			this.square.draw(context);
-			util.drawUtil.renderText(context, "test", "20px arial", "#000", new util.Vec2(15,30));
-		};
+		this.graphicsObject = graphicsObject;
 	};
 
+	Entity.prototype.constructor = Entity;
+	Entity.prototype.preUpdate = function(){
+		if(this.graphicsObject.x >= settings.width - this.graphicsObject.width){
+			this.vx = -this.speed;
+		}
+		if(this.graphicsObject.x <= 0){
+			this.vx = this.speed;
+		}
+		if(this.graphicsObject.y >= settings.height - this.graphicsObject.height){
+			this.vy = -this.speed;
+		}
+		if(this.graphicsObject.y <= 0){
+			this.vy = this.speed;
+		}
+	};
+	Entity.prototype.postUpdate = function(){
+
+	};
+	Entity.prototype.update = function(){
+		this.graphicsObject.x += this.vx;
+		this.graphicsObject.y += this.vy;
+	};
+
+
 	var game = (function(){
-		var canvas = (function(){
-			var can, ctx, buffer, bctx;
-			function setup(){
-				if(settings.canvasID === ''){
-					throw Error("Canvas id is blank");
-				};
-				can = document.getElementById(settings.canvasID);
 
-				ctx = can.getContext('2d');
-				can.width = settings.width;
-				can.height = settings.height;
+		var Canvas = function(width, height, canvasID){
+			this.width = width || 800;
+			this.height = height || 600;
+			this.canvas = document.getElementById(canvasID || 'canvas');
+			this.context = this.canvas.getContext('2d');
+			this.canvas.width = this.width;
+			this.canvas.height = this.height;
 
-				buffer = document.createElement('canvas');
-				bctx = buffer.getContext('2d');
-				buffer.width = settings.width;
-				buffer.height = settings.height;
+			this.buffer = document.createElement('canvas');
+			this.bufferContext = this.buffer.getContext('2d');
+			this.buffer.width = this.width;
+			this.buffer.height = this.height;
+
+			this.data;
+		};
+
+		//constructor
+		Canvas.prototype.constructor = Canvas;
+
+		Canvas.prototype.render = function(objects){
+			this.bufferContext.fillStyle = settings.clearClr;
+			this.bufferContext.fillRect(0, 0, this.width, this.height);
+
+			this.bufferContext.setTransform(1,0,0,1,0,0);
+
+			this.renderObjects(objects);
+			this.context.drawImage(this.buffer, 0, 0);
+		};
+
+		Canvas.prototype.renderObjects = function(objects){
+			for(var i = 0; i < objects.length; i++){
+				this.data = objects[i].graphicsObject;
+
+				if(this.data.type === "Rectangle"){
+					this.bufferContext.fillStyle = this.data.colour;
+					this.bufferContext.fillRect(this.data.x, this.data.y, this.data.width, this.data.height);
+				}else if(this.data.type === "Circle"){
+					this.bufferContext.beginPath();
+					this.bufferContext.arc(this.data.x, this.data.y, this.data.radius, 0, 2*Math.PI);
+            		this.bufferContext.closePath();
+					this.bufferContext.fillStyle = this.data.colour;
+					this.bufferContext.fill();
+				}
+//				else if(this.data.type === "RoundRectangle"){
+//
+//				}
 			}
+		};
 
-			function clear(){
-				bctx.fillStyle = settings.clearClr;
-				bctx.beginPath();
-				bctx.rect(0, 0, settings.width, settings.height);
-				bctx.closePath();
-				bctx.fill();
-			}
 
-			function draw(){
-				ctx.drawImage(buffer, 0, 0);
-			}
-
-			function getBctx(){
-				return bctx;
-			}
-
-			return {
-				"setup": setup,
-				"clear": clear,
-				"draw": draw,
-				"ctx": getBctx
-			};
-		}()),
-			entities = [],
+		var	entities = [],
 			i = 0,
+			canvas = new Canvas(),
 			init = function(){
-				canvas.setup();
-				entities.push(new Entity(25,550,50,50, 3));
-				entities.push(new Entity(67,543,50,50, 2));
-				entities.push(new Entity(63,73,50,50, 4));
-				entities.push(new Entity(125,123,50,50, 6));
-				entities.push(new Entity(225,410,50,50, 1));
-				entities.push(new Entity(350,354,50,50, 3));
-				entities.push(new Entity(75,432,50,50, 8));
-				entities.push(new Entity(140,200,50,50, 4));
+				entities.push(new Entity(new util.Circle(25,550,25,'#821616'), 3));
+				entities.push(new Entity(new util.Circle(67,543,25,'#821616'), 2));
+				entities.push(new Entity(new util.Circle(63,73,25,'#821616'), 4));
+				entities.push(new Entity(new util.Circle(125,123,25,'#821616'), 6));
+
+				entities.push(new Entity(new util.Rectangle(225,410,50,50,'#821616'), 1));
+				entities.push(new Entity(new util.Rectangle(350,354,50,50,'#821616'), 3));
+				entities.push(new Entity(new util.Rectangle(75,432,50,50,'#821616'), 8));
+				entities.push(new Entity(new util.Rectangle(140,200,50,50,'#821616'), 4));
+			},
+			preUpdate = function(){
+				i=0;
+				for(; i < entities.length; i++){
+					entities[i].preUpdate();
+				}
 			},
 			update = function(){
 				//update
@@ -195,29 +214,32 @@
 					entities[i].update();
 				}
 			},
-			draw = function(context){
-				canvas.clear();
-				i = 0;
+			postUpdate = function(){
+				i=0;
 				for(; i < entities.length; i++){
-					entities[i].draw(context);
+					entities[i].postUpdate();
 				}
-				canvas.draw();
+			},
+			draw = function(){
+				canvas.render(entities);
 			},
 			run = (function(){
 				var loops = 0,
 					fps = 60,
 					skipTicks = (1000 / fps),
 					maxFrameSkip = 10,
-					nextGameTick = (new Date()).getTime();
+					nextGameTick = Date.now();
 
 				return function(){
 					loops = 0;
-					while((new Date()).getTime() > nextGameTick && loops < maxFrameSkip){
+					while(Date.now() > nextGameTick && loops < maxFrameSkip){
+						preUpdate();
 						update();
+						postUpdate();
 						nextGameTick += skipTicks;
 						loops++;
 					}
-					draw(canvas.ctx());
+					draw();
 				};
 			}());
 
