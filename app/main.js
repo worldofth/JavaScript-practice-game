@@ -1,5 +1,4 @@
-/*global window*/
-/*global document*/
+/*global window, document*/
 
 (function(){
 	(function(){
@@ -97,9 +96,15 @@
 
 
 		return {
-			"Vec2" : Vec2,
-			"Rectangle": Rectangle,
-			"Circle": Circle,
+			//graphic object types
+			"type_rec" 	: "Rectangle",
+			"type_cir" 	: "Circle",
+			"type_rrec" : "RoundRectangle",
+
+			//objects
+			"Vec2" 		: Vec2,
+			"Rectangle"	: Rectangle,
+			"Circle"	: Circle,
 			//"RoundRectangle": RoundRectangle
 		};
 	}());
@@ -134,7 +139,6 @@
 		this.graphicsObject.y += this.vy;
 	};
 
-
 	var game = (function(){
 
 		var Canvas = function(width, height, canvasID){
@@ -150,30 +154,36 @@
 			this.buffer.width = this.width;
 			this.buffer.height = this.height;
 
-			this.data;
+			this.data = null;
+			this.i = 0;
 		};
 
 		//constructor
 		Canvas.prototype.constructor = Canvas;
 
 		Canvas.prototype.render = function(objects){
+			//clear
 			this.bufferContext.fillStyle = settings.clearClr;
 			this.bufferContext.fillRect(0, 0, this.width, this.height);
 
-			this.bufferContext.setTransform(1,0,0,1,0,0);
+			//this.bufferContext.setTransform(1,0,0,1,0,0);
 
+			//render basic objects
 			this.renderObjects(objects);
+
+			//render buffer
 			this.context.drawImage(this.buffer, 0, 0);
 		};
 
 		Canvas.prototype.renderObjects = function(objects){
-			for(var i = 0; i < objects.length; i++){
-				this.data = objects[i].graphicsObject;
+			this.i = 0;
+			for(; this.i < objects.length; this.i++){
+				this.data = objects[this.i].graphicsObject;
 
-				if(this.data.type === "Rectangle"){
+				if(this.data.type === util.type_rec){
 					this.bufferContext.fillStyle = this.data.colour;
 					this.bufferContext.fillRect(this.data.x, this.data.y, this.data.width, this.data.height);
-				}else if(this.data.type === "Circle"){
+				}else if(this.data.type === util.type_cir){
 					this.bufferContext.beginPath();
 					this.bufferContext.arc(this.data.x, this.data.y, this.data.radius, 0, 2*Math.PI);
             		this.bufferContext.closePath();
@@ -187,61 +197,67 @@
 		};
 
 
-		var	entities = [],
-			i = 0,
-			canvas = new Canvas(),
-			init = function(){
-				entities.push(new Entity(new util.Circle(25,550,25,'#821616'), 3));
-				entities.push(new Entity(new util.Circle(67,543,25,'#821616'), 2));
-				entities.push(new Entity(new util.Circle(63,73,25,'#821616'), 4));
-				entities.push(new Entity(new util.Circle(125,123,25,'#821616'), 6));
+		var	entities = [];
+		var	i = 0;
+		var canvas = new Canvas();
 
-				entities.push(new Entity(new util.Rectangle(225,410,50,50,'#821616'), 1));
-				entities.push(new Entity(new util.Rectangle(350,354,50,50,'#821616'), 3));
-				entities.push(new Entity(new util.Rectangle(75,432,50,50,'#821616'), 8));
-				entities.push(new Entity(new util.Rectangle(140,200,50,50,'#821616'), 4));
-			},
-			preUpdate = function(){
-				i=0;
-				for(; i < entities.length; i++){
-					entities[i].preUpdate();
-				}
-			},
-			update = function(){
-				//update
-				i=0;
-				for(; i < entities.length; i++){
-					entities[i].update();
-				}
-			},
-			postUpdate = function(){
-				i=0;
-				for(; i < entities.length; i++){
-					entities[i].postUpdate();
-				}
-			},
-			draw = function(){
-				canvas.render(entities);
-			},
-			run = (function(){
-				var loops = 0,
-					fps = 60,
-					skipTicks = (1000 / fps),
-					maxFrameSkip = 10,
-					nextGameTick = Date.now();
+		var	init = function(){
+			entities.push(new Entity(new util.Circle(25,550,25,'#821616'), 3));
+			entities.push(new Entity(new util.Circle(67,543,25,'#821616'), 2));
+			entities.push(new Entity(new util.Circle(63,73,25,'#821616'), 4));
+			entities.push(new Entity(new util.Circle(125,123,25,'#821616'), 6));
 
-				return function(){
-					loops = 0;
-					while(Date.now() > nextGameTick && loops < maxFrameSkip){
-						preUpdate();
-						update();
-						postUpdate();
-						nextGameTick += skipTicks;
-						loops++;
-					}
-					draw();
-				};
-			}());
+			entities.push(new Entity(new util.Rectangle(225,410,50,50,'#821616'), 1));
+			entities.push(new Entity(new util.Rectangle(350,354,50,50,'#821616'), 3));
+			entities.push(new Entity(new util.Rectangle(75,432,50,50,'#821616'), 8));
+			entities.push(new Entity(new util.Rectangle(140,200,50,50,'#821616'), 4));
+		};
+
+		var	preUpdate = function(){
+			i=0;
+			for(; i < entities.length; i++){
+				entities[i].preUpdate();
+			}
+		};
+
+		var update = function(){
+			//update
+			i=0;
+			for(; i < entities.length; i++){
+				entities[i].update();
+			}
+		};
+
+		var	postUpdate = function(){
+			i=0;
+			for(; i < entities.length; i++){
+				entities[i].postUpdate();
+			}
+		};
+
+		var draw = function(){
+			canvas.render(entities);
+		};
+
+		var run = (function(){
+			var loops = 0,
+				fps = 60,
+				skipTicks = (1000 / fps),
+				maxFrameSkip = 10,
+				nextGameTick = Date.now();
+
+			return function(){
+				loops = 0;
+				while(Date.now() > nextGameTick && loops < maxFrameSkip){
+					preUpdate();
+					update();
+					postUpdate();
+					nextGameTick += skipTicks;
+					loops++;
+				}
+				draw();
+			};
+		}());
 
 		return {
 			"run": run,
