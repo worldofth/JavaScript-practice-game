@@ -63,9 +63,9 @@ testgame.util = (function(){
 
 	return {
 		//graphic object types
-		"type_rec" 	: "Rectangle",
-		"type_cir" 	: "Circle",
-		"type_rrec" : "RoundRectangle",
+		"TYPE_REC" 	: "Rectangle",
+		"TYPE_CIR" 	: "Circle",
+		"TYPE_RREC" : "RoundRectangle",
 
 		//objects
 		"Vec2" 		: Vec2,

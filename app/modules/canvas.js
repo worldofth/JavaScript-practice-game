@@ -40,17 +40,17 @@ testgame.Canvas.prototype.renderObjects = function(objects){
 	for(; this.i < objects.length; this.i++){
 		this.data = objects[this.i].graphicsObject;
 
-		if(this.data.type === testgame.util.type_rec){
+		if(this.data.type === testgame.util.TYPE_REC){
 			this.bufferContext.fillStyle = this.data.colour;
 			this.bufferContext.fillRect(this.data.x, this.data.y, this.data.width, this.data.height);
-		}else if(this.data.type === testgame.util.type_cir){
+		}else if(this.data.type === testgame.util.TYPE_CIR){
 			this.bufferContext.beginPath();
 			this.bufferContext.arc(this.data.x, this.data.y, this.data.radius, 0, 2*Math.PI);
 			this.bufferContext.closePath();
 			this.bufferContext.fillStyle = this.data.colour;
 			this.bufferContext.fill();
 		}
-		else if(this.data.type === testgame.util.type_rrec){
+		else if(this.data.type === testgame.util.TYPE_RREC){
 			var rx = this.data.x;
 			var ry = this.data.y;
 			var width = this.data.width;
