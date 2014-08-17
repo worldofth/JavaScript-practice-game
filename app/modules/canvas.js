@@ -35,19 +35,40 @@ testgame.Canvas.prototype.render = function(objects){
 	this.context.drawImage(this.buffer, 0, 0);
 };
 
+testgame.Canvas.prototype.processColour = function(colourObj){
+	if(typeof colourObj !== 'object'){
+		return colourObj;
+	}else if(colourObj.grad){
+		return colourObj.grad;
+	}else{
+		var grad;
+		if(colourObj.isRadial){
+			grad = this.bufferContext.createRadialGradient(colourObj.x, colourObj.y,colourObj.r, colourObj.x1, colourObj.y1, colourObj.r1);
+		}else{
+			grad = this.bufferContext.createLinearGradient(colourObj.x, colourObj.y, colourObj.x1, colourObj.y1);
+		}
+		colourObj.colours.colLength = colourObj.colours.length;
+		for(var i = 0; i < colourObj.colours.length; i++){
+			grad.addColorStop(colourObj.colours[i].pos, colourObj.colours[i].colour);
+		}
+		colourObj.grad = grad;
+		return grad;
+	}
+};
+
 testgame.Canvas.prototype.renderObjects = function(objects){
 	this.i = 0;
 	for(; this.i < objects.length; this.i++){
 		this.data = objects[this.i].graphicsObject;
 
 		if(this.data.type === testgame.util.TYPE_REC){
-			this.bufferContext.fillStyle = this.data.colour;
+			this.bufferContext.fillStyle = this.processColour(this.data.colour);
 			this.bufferContext.fillRect(this.data.x, this.data.y, this.data.width, this.data.height);
 		}else if(this.data.type === testgame.util.TYPE_CIR){
 			this.bufferContext.beginPath();
 			this.bufferContext.arc(this.data.x, this.data.y, this.data.radius, 0, 2*Math.PI);
 			this.bufferContext.closePath();
-			this.bufferContext.fillStyle = this.data.colour;
+			this.bufferContext.fillStyle = this.processColour(this.data.colour);
 			this.bufferContext.fill();
 		}
 		else if(this.data.type === testgame.util.TYPE_RREC){
@@ -72,7 +93,7 @@ testgame.Canvas.prototype.renderObjects = function(objects){
 			this.bufferContext.quadraticCurveTo(rx, ry, rx, ry + radius);
 			this.bufferContext.closePath();
 
-			this.bufferContext.fillStyle = this.data.colour;
+			this.bufferContext.fillStyle = this.processColour(this.data.colour);
 			this.bufferContext.fill();
 
 		}

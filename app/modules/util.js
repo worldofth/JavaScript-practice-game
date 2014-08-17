@@ -60,17 +60,57 @@ testgame.util = (function(){
 		return new RoundRectangle(this.x, this.y, this.width, this.height, this.radius, this.colour);
 	};
 
+	var Text = function(x, y, textStr, font, colour){
+		this.x = x || 0;
+		this.y = x || 0;
+		this.textStr = textStr || '';
+		this.font = font || "10px Arial";
+		this.colour = colour || '#000000';
+	};
+	Text.prototype.constructor = Text;
+	Text.prototype.clone = function(){
+		return new Text(this.x, this.y, this.textStr, this.font, this.colour);
+	};
+	Text.prototype.measureText = function(context){
+		context.font=this.font;
+		return context.measureText(this.textStr);
+	};
+
+	var Gradient = function(x,y,x1,y1,r,r1,colours){
+		this.isRadial = !!r || r>0;
+		this.r = r || 0;
+		this.r1 = r1 || 0;
+		this.x = x || 0;
+		this.y = y || 0;
+		this.x1 = x1 || 0;
+		this.y1 = y1 || 0;
+		this.colours = colours || [];
+		this.colLength = 0;
+		this.grad = null;
+	};
+	Gradient.prototype.constructor = Gradient;
+	Gradient.prototype.clone = function(){
+		return new Gradient(this.x, this.y, this.x1, this.y1, this.r, this.r1, this.colours);
+	};
+	Gradient.prototype.addColour = function(pos, colour){
+		pos = pos > 1 ? 1 : pos;
+		this.colours.push({ "pos": pos, "colour" : colour });
+		return this;
+	};
+
 
 	return {
 		//graphic object types
 		"TYPE_REC" 	: "Rectangle",
 		"TYPE_CIR" 	: "Circle",
 		"TYPE_RREC" : "RoundRectangle",
+		"TYPE_TEXT" : "Text",
 
 		//objects
 		"Vec2" 		: Vec2,
 		"Rectangle"	: Rectangle,
 		"Circle"	: Circle,
-		"RoundRectangle": RoundRectangle
+		"RoundRectangle": RoundRectangle,
+		"Gradient" : Gradient
 	};
 }());
