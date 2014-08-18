@@ -38,3 +38,11 @@ window.onload = function(){
 };
 
 
+window.addEventListener("focus", function() {
+	'use strict';
+	testgame.game.focused = true;
+}, false);
+window.addEventListener("blur", function() {
+	'use strict';
+	testgame.game.focused = false;
+}, false);

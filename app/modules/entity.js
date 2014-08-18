@@ -1,27 +1,28 @@
 var testgame = testgame || {};
 
-testgame.Entity = function(graphicsObject, speed){
+testgame.Entity = function(x, y, graphicsObject, speed){
 	'use strict';
-	this.vx = -speed;
-	this.vy = speed;
+	this.vec2 = new testgame.util.Vec2(x,y);
 	this.speed = speed;
+	this.vec2.vx = -speed;
+	this.vec2.vy = speed;
 	this.graphicsObject = graphicsObject;
 };
 
 testgame.Entity.prototype.constructor = testgame.Entity;
 testgame.Entity.prototype.preUpdate = function(){
 	'use strict';
-	if(this.graphicsObject.x >= testgame.settings.width - this.graphicsObject.width){
-		this.vx = -this.speed;
+	if(this.vec2.x >= testgame.settings.width - this.graphicsObject.width){
+		this.vec2.vx = -this.speed;
 	}
-	if(this.graphicsObject.x <= 0){
-		this.vx = this.speed;
+	if(this.vec2.x <= 0){
+		this.vec2.vx = this.speed;
 	}
-	if(this.graphicsObject.y >= testgame.settings.height - this.graphicsObject.height){
-		this.vy = -this.speed;
+	if(this.vec2.y >= testgame.settings.height - this.graphicsObject.height){
+		this.vec2.vy = -this.speed;
 	}
-	if(this.graphicsObject.y <= 0){
-		this.vy = this.speed;
+	if(this.vec2.y <= 0){
+		this.vec2.vy = this.speed;
 	}
 };
 testgame.Entity.prototype.postUpdate = function(){
@@ -30,6 +31,6 @@ testgame.Entity.prototype.postUpdate = function(){
 };
 testgame.Entity.prototype.update = function(){
 	'use strict';
-	this.graphicsObject.x += this.vx;
-	this.graphicsObject.y += this.vy;
+	this.vec2.x += this.vec2.vx;
+	this.vec2.y += this.vec2.vy;
 };

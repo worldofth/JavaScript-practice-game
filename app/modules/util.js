@@ -87,7 +87,6 @@ testgame.util = (function(){
 		this.y1 = y1 || 0;
 		this.colours = colours || [];
 		this.colLength = 0;
-		this.grad = null;
 	};
 	Gradient.prototype.constructor = Gradient;
 	Gradient.prototype.clone = function(){

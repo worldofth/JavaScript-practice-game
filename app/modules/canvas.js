@@ -16,6 +16,9 @@ testgame.Canvas = function(width, height, canvasID){
 	this.buffer.height = this.height;
 
 	this.data = null;
+	this.grad = null;
+	this.x = 0;
+	this.y = 0;
 	this.i = 0;
 };
 
@@ -37,25 +40,22 @@ testgame.Canvas.prototype.render = function(objects){
 	this.context.drawImage(this.buffer, 0, 0);
 };
 
-testgame.Canvas.prototype.processColour = function(colourObj){
+testgame.Canvas.prototype.processColour = function(colourObj, x, y){
 	'use strict';
 	if(typeof colourObj !== 'object'){
 		return colourObj;
-	}else if(colourObj.grad){
-		return colourObj.grad;
 	}else{
-		var grad;
+
 		if(colourObj.isRadial){
-			grad = this.bufferContext.createRadialGradient(colourObj.x, colourObj.y,colourObj.r, colourObj.x1, colourObj.y1, colourObj.r1);
+			this.grad = this.bufferContext.createRadialGradient(colourObj.x + x, colourObj.y + y, colourObj.r, colourObj.x1 + x, colourObj.y1 + y, colourObj.r1);
 		}else{
-			grad = this.bufferContext.createLinearGradient(colourObj.x, colourObj.y, colourObj.x1, colourObj.y1);
+			this.grad = this.bufferContext.createLinearGradient(colourObj.x + x, colourObj.y + y, colourObj.x1 + x, colourObj.y1 + y);
 		}
 		colourObj.colours.colLength = colourObj.colours.length;
 		for(var i = 0; i < colourObj.colours.length; i++){
-			grad.addColorStop(colourObj.colours[i].pos, colourObj.colours[i].colour);
+			this.grad.addColorStop(colourObj.colours[i].pos, colourObj.colours[i].colour);
 		}
-		colourObj.grad = grad;
-		return grad;
+		return this.grad;
 	}
 };
 
@@ -65,19 +65,22 @@ testgame.Canvas.prototype.renderObjects = function(objects){
 	for(; this.i < objects.length; this.i++){
 		this.data = objects[this.i].graphicsObject;
 
+		this.x = objects[this.i].vec2.x + this.data.x;
+		this.y = objects[this.i].vec2.y + this.data.y;
+
 		if(this.data.type === testgame.util.TYPE_REC){
-			this.bufferContext.fillStyle = this.processColour(this.data.colour);
-			this.bufferContext.fillRect(this.data.x, this.data.y, this.data.width, this.data.height);
+			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
+			this.bufferContext.fillRect(this.x, this.y, this.data.width, this.data.height);
 		}else if(this.data.type === testgame.util.TYPE_CIR){
 			this.bufferContext.beginPath();
-			this.bufferContext.arc(this.data.x, this.data.y, this.data.radius, 0, 2*Math.PI);
+			this.bufferContext.arc(this.x, this.y, this.data.radius, 0, 2*Math.PI);
 			this.bufferContext.closePath();
-			this.bufferContext.fillStyle = this.processColour(this.data.colour);
+			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
 			this.bufferContext.fill();
 		}
 		else if(this.data.type === testgame.util.TYPE_RREC){
-			var rx = this.data.x;
-			var ry = this.data.y;
+			var rx = this.x;
+			var ry = this.y;
 			var width = this.data.width;
 			var height = this.data.height;
 			var radius = this.data.radius;
@@ -97,7 +100,7 @@ testgame.Canvas.prototype.renderObjects = function(objects){
 			this.bufferContext.quadraticCurveTo(rx, ry, rx, ry + radius);
 			this.bufferContext.closePath();
 
-			this.bufferContext.fillStyle = this.processColour(this.data.colour);
+			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
 			this.bufferContext.fill();
 
 		}
