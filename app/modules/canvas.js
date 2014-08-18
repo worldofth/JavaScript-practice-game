@@ -125,7 +125,6 @@ testgame.Canvas.prototype.processColour = function(colourObj, x, y){
 		}
 
 		//add the colours and thier positions to the grad
-		colourObj.colours.colLength = colourObj.colours.length;
 		for(var i = 0; i < colourObj.colours.length; i++){
 			this.grad.addColorStop(colourObj.colours[i].pos, colourObj.colours[i].colour);
 		}
