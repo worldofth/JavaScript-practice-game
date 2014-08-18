@@ -35,9 +35,9 @@ testgame.Canvas = function(width, height, canvasID){
 
 	/**
 	* @property { HTMLElement } - html element of the canvas
-	* @default id set to 'canvas' if not provided
+	* @default id set to settings canvasID if not 'canvas'
 	*/
-	this.canvas = document.getElementById(canvasID || 'canvas');
+	this.canvas = document.getElementById(canvasID || testgame.settings.canvasID || 'canvas');
 
 	/**
 	* @property { Object } - 2d drawing context of canvas

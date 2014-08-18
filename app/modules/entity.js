@@ -47,7 +47,7 @@ testgame.Entity = function(x, y, graphicsObject, speed){
 testgame.Entity.prototype.constructor = testgame.Entity;
 
 /**
-* The update before the main update, here being used to calculate colisions
+* The update before the main update
 *
 * @method testgame.Entity#preUpdate
 */

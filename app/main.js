@@ -30,9 +30,6 @@ var testgame = testgame || {};
 
 window.onload = function(){
 	'use strict';
-	testgame.settings.width = 800;
-	testgame.settings.height = 600;
-	testgame.settings.canvasID = 'canvas';
 	testgame.game.init();
 	window.onEachFrame(testgame.game.run);
 };
