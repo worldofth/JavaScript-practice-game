@@ -8,7 +8,7 @@ testgame.settings = {
 };
 
 testgame.game = (function(){
-
+	'use strict';
 	var	entities = [];
 	var	i = 0;
 	var canvas = new testgame.Canvas();

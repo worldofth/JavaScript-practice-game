@@ -1,5 +1,6 @@
 /*global window*/
 (function(){
+	'use strict';
 	var onEachFrame;
 	if(window.requestAnimationFrame){
 		onEachFrame = function(cb){
@@ -28,6 +29,7 @@
 var testgame = testgame || {};
 
 window.onload = function(){
+	'use strict';
 	testgame.settings.width = 800;
 	testgame.settings.height = 600;
 	testgame.settings.canvasID = 'canvas';

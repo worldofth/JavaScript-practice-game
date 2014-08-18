@@ -2,6 +2,7 @@
 var testgame = testgame || {};
 
 testgame.Canvas = function(width, height, canvasID){
+	'use strict';
 	this.width = width || 800;
 	this.height = height || 600;
 	this.canvas = document.getElementById(canvasID || 'canvas');
@@ -22,6 +23,7 @@ testgame.Canvas = function(width, height, canvasID){
 testgame.Canvas.prototype.constructor = testgame.Canvas;
 
 testgame.Canvas.prototype.render = function(objects){
+	'use strict';
 	//clear
 	this.bufferContext.fillStyle = testgame.settings.clearClr;
 	this.bufferContext.fillRect(0, 0, this.width, this.height);
@@ -36,6 +38,7 @@ testgame.Canvas.prototype.render = function(objects){
 };
 
 testgame.Canvas.prototype.processColour = function(colourObj){
+	'use strict';
 	if(typeof colourObj !== 'object'){
 		return colourObj;
 	}else if(colourObj.grad){
@@ -57,6 +60,7 @@ testgame.Canvas.prototype.processColour = function(colourObj){
 };
 
 testgame.Canvas.prototype.renderObjects = function(objects){
+	'use strict';
 	this.i = 0;
 	for(; this.i < objects.length; this.i++){
 		this.data = objects[this.i].graphicsObject;
