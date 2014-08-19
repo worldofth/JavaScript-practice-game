@@ -74,6 +74,12 @@ testgame.game = (function(){
 	* @method testgame.game#init
 	*/
 	var	init = function(){
+		testgame.input.addKeyMap(testgame.input.Keyboard.W, "up");
+		testgame.input.addKeyMap(testgame.input.Keyboard.UP, "up");
+
+		testgame.input.addKeyMap(testgame.input.Keyboard.S, "down");
+		testgame.input.addKeyMap(testgame.input.Keyboard.DOWN, "down");
+
 		var grad1 = new testgame.util.Gradient(0,0,50,50,10,10).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616'),
 			grad2 = new testgame.util.Gradient(0,0,50,0).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616');
 		entities.push(new testgame.Entity(25, 550, new testgame.util.Circle(0,10,25,grad1), testgame.settings.speed));
@@ -86,6 +92,8 @@ testgame.game = (function(){
 
 		entities.push(new testgame.Entity(75, 432, new testgame.util.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
 		entities.push(new testgame.Entity(140, 200, new testgame.util.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
+
+		entities.push(new testgame.Entity(0, 0, new testgame.util.Text(20, 20, "test"), 0));
 	};
 
 	/**
@@ -94,8 +102,9 @@ testgame.game = (function(){
 	* @method testgame.game#preUpdate
 	*/
 	var	preUpdate = function(){
-		i=0;
+		testgame.input.tickAll();
 
+		i=0;
 		//looping through all entities
 		for(; i < entities.length; i++){
 			entities[i].preUpdate();
@@ -108,8 +117,20 @@ testgame.game = (function(){
 	* @method testgame.game#update
 	*/
 	var update = function(){
-		i=0;
+		if(testgame.input.wasPressed("up")){
+			entities[entities.length-1].graphicsObject.textStr = "up";
+		}
+		if(testgame.input.wasPressed("down")){
+			entities[entities.length-1].graphicsObject.textStr = "down";
+		}
+		if(testgame.input.wasReleased("up")){
+			entities[entities.length-1].graphicsObject.textStr = "none";
+		}
+		if(testgame.input.wasReleased("down")){
+			entities[entities.length-1].graphicsObject.textStr = "none";
+		}
 
+		i=0;
 		//looping through all entities
 		for(; i < entities.length; i++){
 			entities[i].update();
@@ -124,7 +145,7 @@ testgame.game = (function(){
 	var	postUpdate = function(){
 		i=0;
 
-		//looping through all entities
+		//loopinwwwwwwwwwwwwwwwwwwwwwwwwwwg through all entities
 		for(; i < entities.length; i++){
 			entities[i].postUpdate();
 		}
@@ -158,6 +179,8 @@ testgame.game = (function(){
 					preUpdate();
 					update();
 					postUpdate();
+				}else{
+					testgame.input.releaseAll();
 				}
 				nextGameTick += skipTicks;
 				loops++;

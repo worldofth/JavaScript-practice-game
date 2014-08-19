@@ -482,6 +482,7 @@ testgame.util = (function(){
 		"Rectangle"	: Rectangle,
 		"Circle"	: Circle,
 		"RoundRectangle": RoundRectangle,
-		"Gradient" : Gradient
+		"Gradient" : Gradient,
+		"Text": Text
 	};
 }());
