@@ -80,6 +80,12 @@ testgame.game = (function(){
 		testgame.input.addKeyMap(testgame.input.Keyboard.S, "down");
 		testgame.input.addKeyMap(testgame.input.Keyboard.DOWN, "down");
 
+		testgame.input.addKeyMap(testgame.input.Keyboard.A, "left");
+		testgame.input.addKeyMap(testgame.input.Keyboard.LEFT, "left");
+
+		testgame.input.addKeyMap(testgame.input.Keyboard.D, "right");
+		testgame.input.addKeyMap(testgame.input.Keyboard.RIGHT, "right");
+
 		var grad1 = new testgame.util.Gradient(0,0,50,50,10,10).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616'),
 			grad2 = new testgame.util.Gradient(0,0,50,0).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616');
 		entities.push(new testgame.Entity(25, 550, new testgame.util.Circle(0,10,25,grad1), testgame.settings.speed));
@@ -90,10 +96,11 @@ testgame.game = (function(){
 		entities.push(new testgame.Entity(225, 410, new testgame.util.Rectangle(0,25,50,50,grad2), testgame.settings.speed));
 		entities.push(new testgame.Entity(350, 345, new testgame.util.Rectangle(0,0,50,50,'#821616'), testgame.settings.speed));
 
-		entities.push(new testgame.Entity(75, 432, new testgame.util.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
+		entities.push(new testgame.Player(75, 432, new testgame.util.RoundRectangle(0,0,50,50,10,'#086a10'), 0));
 		entities.push(new testgame.Entity(140, 200, new testgame.util.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
 
 		entities.push(new testgame.Entity(0, 0, new testgame.util.Text(20, 20, "test"), 0));
+		console.log(entities);
 	};
 
 	/**
