@@ -71,13 +71,11 @@ testgame.util = (function(){
 
 		/**
 		* @property { number } - sets the intial x velocity
-		* @default 0 - defaults to 0 if nothing is passed
 		*/
 		this.vx = 0;
 
 		/**
 		* @property { number } - sets the intial y velocity
-		* @default 0 - defaults to 0 if nothing is passed
 		*/
 		this.vy = 0;
 	};
