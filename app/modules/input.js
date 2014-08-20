@@ -1,44 +1,119 @@
+/**
+* @author Tom Hopkins https://github.com/worldofth
+*/
+
+/**
+* engine namespace
+*/
+var testgame = testgame || {};
 /* globals window */
 
-var testgame = testgame || {};
-
+/**
+* @class testgame.input
+* @classdesc input manager for the game, holding all the logic for handling keys presses
+* @static
+*/
 testgame.input = (function(){
 	'use strict';
 
+	/**
+	* @class testgame.input.Key
+	* @classdesc object which holds a key's current status
+	* @constructor
+	*/
 	var Key = function(){
+		/**
+		* @property { boolean } - changed by key events to be pushed to
+		* the other properties during an update call
+		*/
 		this.nextState = false;
+
+		/**
+		* @property { boolean } - sets when keys used to be down, so has
+		* recently been released
+		*/
 		this._wasDown = false;
+
+		/**
+		* @property { boolean } - when the key is currently down
+		*/
 		this._isDown = false;
 	};
 
+	//constructor
 	Key.prototype.constructor = Key;
 
+	/**
+	* an update tick, updating the keys status
+	*
+	* @method testgame.input.Key#tick
+	*/
 	Key.prototype.tick = function(){
 		this._wasDown = this._isDown;
 		this._isDown = this.nextState;
 	};
 
+	/**
+	* returns true is the key has been pressed
+	*
+	* @method testgame.input.Key#wasPressed
+	* @return { boolean }
+	*/
 	Key.prototype.wasPressed = function(){
 		return !this._wasDown && this._isDown;
 	};
 
+	/**
+	* returns true is the key has been released
+	*
+	* @method testgame.input.Key#wasReleased
+	* @return { boolean }
+	*/
 	Key.prototype.wasReleased = function(){
 		return this._wasDown && !this._isDown;
 	};
 
+	/**
+	* sets the key to be released, this is used for when the game is paused
+	*
+	* @method testgame.input.Key#release
+	*/
 	Key.prototype.release = function(){
 		this.nextState = false;
 	};
 
+	/**
+	* @class testgame.input.Keys
+	* @classdesc holds all the key objects and mappings
+	* @static
+	* @constructor
+	*/
 	var Keys = {};
 
+	/**
+	* @property { Object } - an array like mapping of action names to key object
+	*/
 	Keys.actionKeys = {};
+
+	/**
+	* @property { Object } - an array like mapping of keycodes to action names
+	*/
 	Keys.keyMap = {};
 
+	/**
+	* adds an action name to the action keys, and creates a new key object
+	*
+	* @method testgame.input.Keys#addAction
+	*/
 	Keys.addAction =function(actionName){
 			Keys.actionKeys[actionName]	= new Key();
 	};
 
+	/**
+	* adds an keycode map, if the action name doesn't exist it called addAction
+	*
+	* @method testgame.input.Keys#addKeyMap
+	*/
 	Keys.addKeyMap = function(keycode, actionName){
 		if(!Keys.actionKeys[actionName]){
 			Keys.addAction(actionName);
@@ -46,6 +121,11 @@ testgame.input = (function(){
 		Keys.keyMap[keycode] = actionName;
 	};
 
+	/**
+	* ticks all the keys to update thier status during an update call
+	*
+	* @method testgame.input#tickAll
+	*/
 	var tickAll = function(){
 		for(var key in Keys.actionKeys){
 			Keys.actionKeys[key].tick();
@@ -53,6 +133,11 @@ testgame.input = (function(){
 		return this;
 	};
 
+	/**
+	* releases all the keys
+	*
+	* @method testgame.input#releaseAll
+	*/
 	var releaseAll = function(){
 		for(var key	in Keys.actionKeys){
 			Keys.actionKeys[key].release();
@@ -60,14 +145,33 @@ testgame.input = (function(){
 		return this;
 	};
 
+	/**
+	* returns if an action key has been pressed
+	*
+	* @method testgame.input#wasPressed
+	* @return { boolean }
+	*/
 	var wasPressed = function(actionName){
 		return Keys.actionKeys[actionName].wasPressed();
 	};
 
+	/**
+	* returns if an action key has been released
+	*
+	* @method testgame.input#wasReleased
+	* @return { boolean }
+	*/
 	var wasReleased = function(actionName){
 		return Keys.actionKeys[actionName].wasReleased();
 	};
 
+	/**
+	* on key down callback method, setting the next state of a
+	* key based on the keycode that was pressed
+	*
+	* @method testgame.input#_onKeyDown
+	* @private
+	*/
 	var _onKeyDown = function(event){
 		if(Keys.keyMap[event.keyCode]){
 			Keys.actionKeys[Keys.keyMap[event.keyCode]].nextState = true;
@@ -75,15 +179,24 @@ testgame.input = (function(){
 		}
 	};
 
+	/**
+	* on key up callback method, setting the next state of a
+	* key based on the keycode that was released
+	*
+	* @method testgame.input#_onKeyUp
+	* @private
+	*/
 	var _onKeyUp = function(event){
 		if(Keys.keyMap[event.keyCode]){
 			Keys.actionKeys[Keys.keyMap[event.keyCode]].nextState = false;
 		}
 	};
 
+	//key event listeners
 	window.addEventListener('keydown', _onKeyDown, false);
 	window.addEventListener('keyup', _onKeyUp, false);
 
+	//sets the public interface for testgame.input
 	return{
 		"tickAll": tickAll,
 		"releaseAll": releaseAll,
@@ -94,6 +207,7 @@ testgame.input = (function(){
 	};
 }());
 
+//lists most keycodes for adding key code maps
 testgame.input.Keyboard = {};
 testgame.input.Keyboard.A = "A".charCodeAt(0);
 testgame.input.Keyboard.B = "B".charCodeAt(0);
