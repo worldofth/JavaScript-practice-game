@@ -100,7 +100,6 @@ testgame.game = (function(){
 		entities.push(new testgame.Entity(140, 200, new testgame.util.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
 
 		entities.push(new testgame.Entity(0, 0, new testgame.util.Text(20, 20, "test"), 0));
-		console.log(entities);
 	};
 
 	/**
