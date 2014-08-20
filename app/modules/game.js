@@ -96,7 +96,7 @@ testgame.game = (function(){
 		entities.push(new testgame.Entity(225, 410, new testgame.util.Rectangle(0,25,50,50,grad2), testgame.settings.speed));
 		entities.push(new testgame.Entity(350, 345, new testgame.util.Rectangle(0,0,50,50,'#821616'), testgame.settings.speed));
 
-		entities.push(new testgame.Player(75, 432, new testgame.util.RoundRectangle(0,0,50,50,10,'#086a10'), 0));
+		entities.push(new testgame.Player(75, 432, new testgame.util.RoundRectangle(0,0,50,50,10,'#086a10'), testgame.settings.speed));
 		entities.push(new testgame.Entity(140, 200, new testgame.util.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
 
 		entities.push(new testgame.Entity(0, 0, new testgame.util.Text(20, 20, "test"), 0));
