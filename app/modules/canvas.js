@@ -198,6 +198,10 @@ testgame.Canvas.prototype.renderObjects = function(objects){
 			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
 			this.bufferContext.fill();
 
+		}else if(this.data.type === testgame.util.TYPE_TEXT){
+			this.bufferContext.font = this.data.font;
+			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
+			this.bufferContext.fillText(this.data.textStr,this.x,this.y);
 		}
 	}
 };

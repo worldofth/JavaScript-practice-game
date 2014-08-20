@@ -47,6 +47,25 @@ testgame.Entity = function(x, y, graphicsObject, speed){
 testgame.Entity.prototype.constructor = testgame.Entity;
 
 /**
+* clamps a varible to set bounds
+*
+* @param { number } clamp varible - to be clamped
+* @param { number } min
+* @param { number } max
+* @chainable
+*/
+testgame.Entity.prototype.clamp = function(cv, lb, up){
+	'use strict';
+	if(cv < lb){
+		cv = lb;
+	}
+	if(cv > up){
+		cv = up;
+	}
+	return cv;
+};
+
+/**
 * The update before the main update
 *
 * @method testgame.Entity#preUpdate

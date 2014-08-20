@@ -71,13 +71,11 @@ testgame.util = (function(){
 
 		/**
 		* @property { number } - sets the intial x velocity
-		* @default 0 - defaults to 0 if nothing is passed
 		*/
 		this.vx = 0;
 
 		/**
 		* @property { number } - sets the intial y velocity
-		* @default 0 - defaults to 0 if nothing is passed
 		*/
 		this.vy = 0;
 	};
@@ -482,6 +480,7 @@ testgame.util = (function(){
 		"Rectangle"	: Rectangle,
 		"Circle"	: Circle,
 		"RoundRectangle": RoundRectangle,
-		"Gradient" : Gradient
+		"Gradient" : Gradient,
+		"Text": Text
 	};
 }());
