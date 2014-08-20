@@ -85,6 +85,11 @@ testgame.Player.prototype.preUpdate = function(){
 
 };
 
+/**
+* The update after the main update
+*
+* @method testgame.Player#postUpdate
+*/
 testgame.Player.prototype.postUpdate = function(){
 	'use strict';
 
