@@ -16,7 +16,7 @@ var testgame = testgame || {};
 * @param { Object } graphicsObject - the rendering object
 * @param { number } speed - inital rate of movement
 */
-testgame.Entity = function(x, y, graphicsObject, speed){
+testgame.Entity = function(x, y, shapes, speed){
 	'use strict';
 
 	/**
@@ -37,18 +37,59 @@ testgame.Entity = function(x, y, graphicsObject, speed){
 	this.vec2.vy = speed;
 
 	/**
-	* @property { Object } - Render object
-	* @default empty object
+	* @property { boolean } - if the object moves
+	* @default true
 	*/
-	this.graphicsObject = graphicsObject || {};
+	this.moves = true;
+
+	/**
+	* @property { boolean } - if the renders
+	* @default true
+	*/
+	this.renders = true;
+
+	/**
+	* @property { Object } - Render objects
+	* @default empty array
+	*/
+	this.shapes = shapes || [];
+
+	this.bound = null;
 };
 
 //constructor
 testgame.Entity.prototype.constructor = testgame.Entity;
 
 /**
-* clamps a varible to set bounds
+* adds a shape to the list
 *
+* @method testgame.Entity#addShape
+* @param { object } shape - shape object to be rendered or used for collision
+* @chainable
+*/
+testgame.Entity.prototype.addShape = function(shape){
+	'use strict';
+	this.shapes.push(shape);
+	return this;
+};
+
+/**
+* adds a shape to the list
+*
+* @method testgame.Entity#addShape
+* @param { object } shape - shape object to be rendered or used for collision
+* @chainable
+*/
+testgame.Entity.prototype.removeShape = function(shape){
+	'use strict';
+	this.shapes.slice(this.shapes.indexOf(shape), 1);
+	return this;
+};
+
+/**
+* clamps a varible to set bounds
+
+* @method testgame.Entity#clamp
 * @param { number } clamp varible - to be clamped
 * @param { number } min
 * @param { number } max
@@ -72,25 +113,26 @@ testgame.Entity.prototype.clamp = function(cv, lb, up){
 */
 testgame.Entity.prototype.preUpdate = function(){
 	'use strict';
+	if(this.moves){
+		//if at the right most wall, invert x velocity
+		if(this.vec2.x >= testgame.settings.width){
+			this.vec2.vx = -this.speed;
+		}
 
-	//if at the right most wall, invert x velocity
-	if(this.vec2.x >= testgame.settings.width - this.graphicsObject.width){
-		this.vec2.vx = -this.speed;
-	}
+		//if at the left most wall, invert x velocity
+		if(this.vec2.x <= 0){
+			this.vec2.vx = this.speed;
+		}
 
-	//if at the left most wall, invert x velocity
-	if(this.vec2.x <= 0){
-		this.vec2.vx = this.speed;
-	}
+		//if at the bottom most wall, invert y velocity
+		if(this.vec2.y >= testgame.settings.height){
+			this.vec2.vy = -this.speed;
+		}
 
-	//if at the bottom most wall, invert y velocity
-	if(this.vec2.y >= testgame.settings.height - this.graphicsObject.height){
-		this.vec2.vy = -this.speed;
-	}
-
-	//if at the top most wall, invert y velocity
-	if(this.vec2.y <= 0){
-		this.vec2.vy = this.speed;
+		//if at the top most wall, invert y velocity
+		if(this.vec2.y <= 0){
+			this.vec2.vy = this.speed;
+		}
 	}
 };
 
@@ -101,14 +143,9 @@ testgame.Entity.prototype.preUpdate = function(){
 */
 testgame.Entity.prototype.postUpdate = function(){
 	'use strict';
-
-	if(this.graphicsObject.getBounds){
-		this.graphicsObject.bounds = this.graphicsObject.getBounds();
-		this.vec2.x = this.clamp(this.vec2.x, 0, testgame.settings.width-this.graphicsObject.bounds.width);
-		this.vec2.y = this.clamp(this.vec2.y, 0, testgame.settings.height-this.graphicsObject.bounds.height);
-	}else{
-		this.vec2.x = this.clamp(this.vec2.x, 0, testgame.settings.width-this.graphicsObject.width);
-		this.vec2.y = this.clamp(this.vec2.y, 0, testgame.settings.height-this.graphicsObject.height);
+	if(this.moves){
+		this.vec2.x = this.clamp(this.vec2.x, 0, testgame.settings.width);
+		this.vec2.y = this.clamp(this.vec2.y, 0, testgame.settings.height);
 	}
 
 };
@@ -120,6 +157,8 @@ testgame.Entity.prototype.postUpdate = function(){
 */
 testgame.Entity.prototype.update = function(){
 	'use strict';
-	this.vec2.x += this.vec2.vx;
-	this.vec2.y += this.vec2.vy;
+	if(this.moves){
+		this.vec2.x += this.vec2.vx;
+		this.vec2.y += this.vec2.vy;
+	}
 };

@@ -16,10 +16,10 @@ var testgame = testgame || {};
 * @param { number } radius - starting radius
 * @param { string/Object } colour - starting colour as a string or a grad object
 */
-testgame.Circle = function(x, y, radius, colour){
+testgame.Circle = function(x, y, radius, colour, relpos){
 	'use strict';
 	//calls Shape constructor
-	testgame.Shape.call(this, x, y, colour);
+	testgame.Shape.call(this, x, y, colour, relpos);
 
 	/**
 	* @property { string } - sets the object type used for rendering in the canvas
@@ -37,13 +37,13 @@ testgame.Circle = function(x, y, radius, colour){
 	* @property { number } - sets the width to the radius
 	* @bug currently not correct
 	*/
-	this.width = this.radius;
+	this.width = this.radius*2;
 
 	/**
 	* @property { number } - sets the height to the radius
 	* @bug currently not correct
 	*/
-	this.height = this.radius;
+	this.height = this.radius*2;
 
 	/**
 	* @property { number } - sets the intial bound rectangle

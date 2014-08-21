@@ -17,10 +17,10 @@ var testgame = testgame || {};
 * @param { string } font - a font string defining the size and type similar to the css font attribute
 * @param { string/Object } colour - starting colour as a string or a grad object
 */
-testgame.Text = function(x, y, textStr, font, colour){
+testgame.Text = function(x, y, textStr, font, colour, relpos){
 	'use strict';
 	//calls Shape constructor
-	testgame.Shape.call(this, x, y, colour);
+	testgame.Shape.call(this, x, y, colour, relpos);
 
 	/**
 	* @property { string } - sets the object type used for rendering in the canvas
@@ -57,6 +57,8 @@ testgame.Text = function(x, y, textStr, font, colour){
 	* @default #000000 - defaults to black if nothing is passed in
 	*/
 	this.colour = colour || '#000000';
+
+	this.relpos = false;
 };
 
 //constructor

@@ -67,11 +67,11 @@ testgame.Canvas = function(width, height, canvasID){
 	this.buffer.height = this.height;
 
 	//variables used in game loop to prevent redeclaring variables each time
-	this.data = null;
+	this.shapes = null;
+	this.shape = null;
 	this.grad = null;
 	this.x = 0;
 	this.y = 0;
-	this.i = 0;
 };
 
 //constructor
@@ -141,64 +141,96 @@ testgame.Canvas.prototype.processColour = function(colourObj, x, y){
 */
 testgame.Canvas.prototype.renderObjects = function(objects){
 	'use strict';
-	this.i = 0;
-	for(; this.i < objects.length; this.i++){
+	//console.log(objects);
+	for(var i = 0; i < objects.length; i++){
+
+		if(!objects[i].renders){
+			continue;
+		}
 
 		//captures each objects data
+		for(var j = 0;  j < objects[i].shapes.length; j++){
 
-		//graphics object to be rendered
-		this.data = objects[this.i].graphicsObject;
+			this.shape = objects[i].shapes[j];
 
-		//the adjusted x coord of the graphics object relative to the Entites position
-		this.x = objects[this.i].vec2.x + this.data.point.x;
+			if(this.shape.isReleativePos){
+				//the adjusted x coord of the graphics object relative to the Entites position
+				this.x = objects[i].vec2.x + this.shape.point.x;
 
-		//the adjusted y coord of the graphics object relative to the Entites position
-		this.y = objects[this.i].vec2.y + this.data.point.y;
+				//the adjusted y coord of the graphics object relative to the Entites position
+				this.y = objects[i].vec2.y + this.shape.point.y;
+			}else{
+				//the adjusted x coord of the graphics object relative to the Entites position
+				this.x = this.shape.point.x;
 
-		if(this.data.type === testgame.util.TYPE_REC){
+				//the adjusted y coord of the graphics object relative to the Entites position
+				this.y = this.shape.point.y;
+			}
 
-			//Renders a rectangle
-			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
-			this.bufferContext.fillRect(this.x, this.y, this.data.width, this.data.height);
-		}else if(this.data.type === testgame.util.TYPE_CIR){
-			//Renders a circle
-			this.bufferContext.beginPath();
-			this.bufferContext.arc(this.x+this.data.radius, this.y+this.data.radius, this.data.radius, 0, 2*Math.PI);
-			this.bufferContext.closePath();
-			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
-			this.bufferContext.fill();
-		}
-		else if(this.data.type === testgame.util.TYPE_RREC){
-
-			//Renders a rounded edge rectangle
-			var rx = this.x;
-			var ry = this.y;
-			var width = this.data.width;
-			var height = this.data.height;
-			var radius = this.data.radius;
-
-			var maxRadius = Math.min(width, height) /2 | 0;
-			radius = radius > maxRadius ? maxRadius : radius;
-
-			this.bufferContext.beginPath();
-			this.bufferContext.moveTo(rx, ry + radius);
-			this.bufferContext.lineTo(rx, ry + height - radius);
-			this.bufferContext.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
-			this.bufferContext.lineTo(rx + width - radius, ry + height);
-			this.bufferContext.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
-			this.bufferContext.lineTo(rx + width, ry + radius);
-			this.bufferContext.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
-			this.bufferContext.lineTo(rx + radius, ry);
-			this.bufferContext.quadraticCurveTo(rx, ry, rx, ry + radius);
-			this.bufferContext.closePath();
-
-			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
-			this.bufferContext.fill();
-
-		}else if(this.data.type === testgame.util.TYPE_TEXT){
-			this.bufferContext.font = this.data.font;
-			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
-			this.bufferContext.fillText(this.data.textStr,this.x,this.y);
+			switch(this.shape.type){
+				case testgame.util.TYPE_REC:
+					this.renderRectangle();
+					break;
+				case testgame.util.TYPE_CIR:
+					this.renderCircle();
+					break;
+				case testgame.util.TYPE_RREC:
+					this.renderRoundRectangle();
+					break;
+				case testgame.util.TYPE_TEXT:
+					this.renderText();
+					break;
+			}
 		}
 	}
+};
+
+testgame.Canvas.prototype.renderRectangle = function(){
+	'use strict';
+	this.bufferContext.fillStyle = this.processColour(this.shape.colour, this.x, this.y);
+	this.bufferContext.fillRect(this.x, this.y, this.shape.width, this.shape.height);
+};
+
+testgame.Canvas.prototype.renderCircle = function(){
+	'use strict';
+	this.bufferContext.beginPath();
+	this.bufferContext.arc(this.x+this.shape.radius, this.y+this.shape.radius, this.shape.radius, 0, 2*Math.PI);
+	this.bufferContext.closePath();
+	this.bufferContext.fillStyle = this.processColour(this.shape.colour, this.x, this.y);
+	this.bufferContext.fill();
+};
+
+testgame.Canvas.prototype.renderRoundRectangle = function(){
+	'use strict';
+	//Renders a rounded edge rectangle
+	var rx = this.x;
+	var ry = this.y;
+	var width = this.shape.width;
+	var height = this.shape.height;
+	var radius = this.shape.radius;
+
+	var maxRadius = Math.min(width, height) /2 | 0;
+	radius = radius > maxRadius ? maxRadius : radius;
+
+	this.bufferContext.beginPath();
+	this.bufferContext.moveTo(rx, ry + radius);
+	this.bufferContext.lineTo(rx, ry + height - radius);
+	this.bufferContext.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
+	this.bufferContext.lineTo(rx + width - radius, ry + height);
+	this.bufferContext.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
+	this.bufferContext.lineTo(rx + width, ry + radius);
+	this.bufferContext.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
+	this.bufferContext.lineTo(rx + radius, ry);
+	this.bufferContext.quadraticCurveTo(rx, ry, rx, ry + radius);
+	this.bufferContext.closePath();
+
+	this.bufferContext.fillStyle = this.processColour(this.shape.colour, this.x, this.y);
+	this.bufferContext.fill();
+};
+
+testgame.Canvas.prototype.renderText = function(){
+	'use strict';
+	this.bufferContext.font = this.shape.font;
+	this.bufferContext.fillStyle = this.processColour(this.shape.colour, this.x, this.y);
+	this.bufferContext.fillText(this.shape.textStr,this.x,this.y);
 };

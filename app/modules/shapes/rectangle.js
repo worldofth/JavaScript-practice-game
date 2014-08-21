@@ -18,10 +18,10 @@ var testgame = testgame || {};
 * @param { number } height - starting height
 * @param { string/Object } colour - starting colour as a string or a grad object
 */
-testgame.Rectangle = function(x, y, width, height, colour){
+testgame.Rectangle = function(x, y, width, height, colour, relpos){
 	'use strict';
 	//calls Shape constructor
-	testgame.Shape.call(this, x, y, colour);
+	testgame.Shape.call(this, x, y, colour, relpos);
 
 	/**
 	* @property { string } - sets the object type used for rendering in the canvas
