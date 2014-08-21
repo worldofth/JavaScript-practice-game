@@ -88,18 +88,18 @@ testgame.game = (function(){
 
 		var grad1 = new testgame.util.Gradient(0,0,50,50,10,10).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616'),
 			grad2 = new testgame.util.Gradient(0,0,50,0).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616');
-		entities.push(new testgame.Entity(25, 550, new testgame.util.Circle(0,10,25,grad1), testgame.settings.speed));
-		entities.push(new testgame.Entity(67, 543, new testgame.util.Circle(0,0,25,'#821616'), testgame.settings.speed));
-		entities.push(new testgame.Entity(63, 73, new testgame.util.Circle(0,0,25,'#821616'), testgame.settings.speed));
-		entities.push(new testgame.Entity(125, 123, new testgame.util.Circle(0,0,25,'#821616'), testgame.settings.speed));
+		entities.push(new testgame.Entity(25, 550, new testgame.Circle(0,10,25,grad1), testgame.settings.speed));
+		entities.push(new testgame.Entity(67, 543, new testgame.Circle(0,0,25,'#821616'), testgame.settings.speed));
+		entities.push(new testgame.Entity(63, 73, new testgame.Circle(0,0,25,'#821616'), testgame.settings.speed));
+		entities.push(new testgame.Entity(125, 123, new testgame.Circle(0,0,25,'#821616'), testgame.settings.speed));
 
-		entities.push(new testgame.Entity(225, 410, new testgame.util.Rectangle(0,25,50,50,grad2), testgame.settings.speed));
-		entities.push(new testgame.Entity(350, 345, new testgame.util.Rectangle(0,0,50,50,'#821616'), testgame.settings.speed));
+		entities.push(new testgame.Entity(225, 410, new testgame.Rectangle(0,25,50,50,grad2), testgame.settings.speed));
+		entities.push(new testgame.Entity(350, 345, new testgame.Rectangle(0,0,50,50,'#821616'), testgame.settings.speed));
 
-		entities.push(new testgame.Player(75, 432, new testgame.util.RoundRectangle(0,0,50,50,10,'#086a10'), testgame.settings.speed));
-		entities.push(new testgame.Entity(140, 200, new testgame.util.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
+		entities.push(new testgame.Player(75, 432, new testgame.RoundRectangle(0,0,50,50,10,'#086a10'), 10));
+		entities.push(new testgame.Entity(140, 200, new testgame.RoundRectangle(0,0,50,50,10,'#821616'), testgame.settings.speed));
 
-		entities.push(new testgame.Entity(0, 0, new testgame.util.Text(20, 20, "test"), 0));
+		entities.push(new testgame.Entity(0, 0, new testgame.Text(20, 20, "test"), 0));
 	};
 
 	/**

@@ -102,6 +102,15 @@ testgame.Entity.prototype.preUpdate = function(){
 testgame.Entity.prototype.postUpdate = function(){
 	'use strict';
 
+	if(this.graphicsObject.getBounds){
+		this.graphicsObject.bounds = this.graphicsObject.getBounds();
+		this.vec2.x = this.clamp(this.vec2.x, 0, testgame.settings.width-this.graphicsObject.bounds.width);
+		this.vec2.y = this.clamp(this.vec2.y, 0, testgame.settings.height-this.graphicsObject.bounds.height);
+	}else{
+		this.vec2.x = this.clamp(this.vec2.x, 0, testgame.settings.width-this.graphicsObject.width);
+		this.vec2.y = this.clamp(this.vec2.y, 0, testgame.settings.height-this.graphicsObject.height);
+	}
+
 };
 
 /**

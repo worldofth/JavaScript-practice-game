@@ -103,28 +103,14 @@ testgame.util = (function(){
 		return new Vec2(this.x, this.y);
 	};
 
-
 	/**
-	* @class testgame.util.Rectangle
-	* @classdesc a graphics object holding used for rendering
+	* @class testgame.util.Point
+	* @classdesc holds an x,y point
 	* @constructor
 	* @param { number } x - starting x position
 	* @param { number } y - starting y position
-	* @param { number } width - starting width
-	* @param { number } height - starting height
-	* @param { string/Object } colour - starting colour as a string or a grad object
 	*/
-	var Rectangle = function(x, y, width, height, colour){
-		/**
-		* @property { string } - sets the object type used for rendering in the canvas
-		* using a util constant
-		*/
-		this.type = testgame.util.TYPE_REC;
-
-		/**
-		* @property { string/Object } - sets the colour, either a colour string or a grad object
-		*/
-		this.colour = colour;
+	var Point = function(x,y){
 
 		/**
 		* @property { number } - sets the intial x position
@@ -137,237 +123,6 @@ testgame.util = (function(){
 		* @default 0 - defaults to 0 if nothing is passed
 		*/
 		this.y = y || 0;
-
-		/**
-		* @property { number } - sets the intial width
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.width = width || 0;
-
-		/**
-		* @property { number } - sets the intial height
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.height = height || 0;
-	};
-
-	//constructor
-	Rectangle.prototype.constructor = Rectangle;
-
-	/**
-	* clones a Rectangle, returning a new copy of this object
-	*
-	* @method testgame.util.Rectangle#clone
-	* @return { Object } - returns a copy of this Rectangle
-	*/
-	Rectangle.prototype.clone = function(){
-		return new Rectangle(this.x, this.y, this.width, this.height, this.colour);
-	};
-
-	/**
-	* @class testgame.util.Circle
-	* @classdesc a graphics object holding used for rendering
-	* @constructor
-	* @param { number } x - starting x position
-	* @param { number } y - starting y position
-	* @param { number } radius - starting radius
-	* @param { string/Object } colour - starting colour as a string or a grad object
-	*/
-	var Circle = function(x, y, radius, colour){
-		/**
-		* @property { string } - sets the object type used for rendering in the canvas
-		* using a util constant
-		*/
-		this.type = testgame.util.TYPE_CIR;
-
-		/**
-		* @property { string/Object } - sets the colour, either a colour string or a grad object
-		*/
-		this.colour = colour;
-
-		/**
-		* @property { number } - sets the intial x position
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.x = x || 0;
-
-		/**
-		* @property { number } - sets the intial y position
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.y = y || 0;
-
-		/**
-		* @property { number } - sets the intial radius
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.radius = radius || 0;
-
-		/**
-		* @property { number } - sets the width to the radius
-		* @bug currently not correct
-		*/
-		this.width = this.radius;
-
-		/**
-		* @property { number } - sets the height to the radius
-		* @bug currently not correct
-		*/
-		this.height = this.radius;
-	};
-
-	//constructor
-	Circle.prototype.constructor = Circle;
-
-	/**
-	* clones a Circle, returning a new copy of this object
-	*
-	* @method testgame.util.Circle#clone
-	* @return { Object } - returns a copy of this Circle
-	*/
-	Circle.prototype.clone = function(){
-		return new Circle(this.x, this.y, this.radius, this.colour);
-	};
-
-
-	/**
-	* @class testgame.util.RoundRectangle
-	* @classdesc a graphics object holding used for rendering
-	* @constructor
-	* @param { number } x - starting x position
-	* @param { number } y - starting y position
-	* @param { number } width - starting width
-	* @param { number } height - starting height
-	* @param { number } radius - starting radius
-	* @param { string/Object } colour - starting colour as a string or a grad object
-	*/
-	var RoundRectangle = function(x, y, width, height, radius, colour){
-		/**
-		* @property { string } - sets the object type used for rendering in the canvas
-		* using a util constant
-		*/
-		this.type = testgame.util.TYPE_RREC;
-
-		/**
-		* @property { number } - sets the intial x position
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.x = x || 0;
-
-		/**
-		* @property { number } - sets the intial y position
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.y = y || 0;
-
-		/**
-		* @property { number } - sets the intial width
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.width = width || 0;
-
-		/**
-		* @property { number } - sets the intial height
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.height = height || 0;
-
-		/**
-		* @property { number } - sets the intial radius
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.radius = radius || 0;
-
-		/**
-		* @property { string/Object } - sets the colour, either a colour string or a grad object
-		*/
-		this.colour = colour;
-	};
-
-	//constructor
-	RoundRectangle.prototype.constructor = RoundRectangle;
-
-	/**
-	* clones a Round Rectangle, returning a new copy of this object
-	*
-	* @method testgame.util.RoundRectangle#clone
-	* @return { Object } - returns a copy of this Round Rectangle
-	*/
-	RoundRectangle.prototype.clone = function(){
-		return new RoundRectangle(this.x, this.y, this.width, this.height, this.radius, this.colour);
-	};
-
-	/**
-	* @class testgame.util.Text
-	* @classdesc a graphics object holding used for rendering text
-	* @constructor
-	* @param { number } x - starting x position
-	* @param { number } y - starting y position
-	* @param { string } textStr - the string that will be rendered
-	* @param { string } font - a font string defining the size and type similar to the css font attribute
-	* @param { string/Object } colour - starting colour as a string or a grad object
-	*/
-	var Text = function(x, y, textStr, font, colour){
-		/**
-		* @property { string } - sets the object type used for rendering in the canvas
-		* using a util constant
-		*/
-		this.type = testgame.util.TYPE_TEXT;
-
-		/**
-		* @property { number } - sets the intial x position
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.x = x || 0;
-
-		/**
-		* @property { number } - sets the intial y position
-		* @default 0 - defaults to 0 if nothing is passed
-		*/
-		this.y = y || 0;
-
-		/**
-		* @property { string } - sets the intial string to be rendered
-		* @default '' - defaults to an empty string if nothing is passed
-		*/
-		this.textStr = textStr || '';
-
-		/**
-		* @property { string } - sets the intial font type
-		* @default "10px Arial" - defaults to 10px arial if nothing is passed
-		*/
-		this.font = font || "10px Arial";
-
-		/**
-		* @property { string/Object } - sets the intial colour to a colour string or a grad object
-		* @default #000000 - defaults to black if nothing is passed in
-		*/
-		this.colour = colour || '#000000';
-	};
-
-	//constructor
-	Text.prototype.constructor = Text;
-
-	/**
-	* clones a Text object, returning a new copy of this object
-	*
-	* @method testgame.util.Text#clone
-	* @return { Object } - returns a copy of this Round Rectangle
-	*/
-	Text.prototype.clone = function(){
-		return new Text(this.x, this.y, this.textStr, this.font, this.colour);
-	};
-
-	/**
-	* measure the size of the text string that is going to be rendered
-	*
-	* @method testgame.util.Text#measureText
-	* @param { Object } context - need the drawing context to access the measure method
-	* @return { Object } - returns a object containing the calculated sizes
-	*/
-	Text.prototype.measureText = function(context){
-		context.font=this.font;
-		return context.measureText(this.textStr);
 	};
 
 	/**
@@ -477,10 +232,7 @@ testgame.util = (function(){
 
 		//objects
 		"Vec2" 		: Vec2,
-		"Rectangle"	: Rectangle,
-		"Circle"	: Circle,
-		"RoundRectangle": RoundRectangle,
-		"Gradient" : Gradient,
-		"Text": Text
+		"Point"		: Point,
+		"Gradient" 	: Gradient
 	};
 }());

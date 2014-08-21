@@ -115,7 +115,6 @@ testgame.Canvas.prototype.processColour = function(colourObj, x, y){
 	if(typeof colourObj !== 'object'){
 		return colourObj;
 	}else{
-
 		//create diffrent grad depending on if it's linear or radial
 		//add objects position to the relative grad position so the grad moves with the object
 		if(colourObj.isRadial){
@@ -151,11 +150,10 @@ testgame.Canvas.prototype.renderObjects = function(objects){
 		this.data = objects[this.i].graphicsObject;
 
 		//the adjusted x coord of the graphics object relative to the Entites position
-		this.x = objects[this.i].vec2.x + this.data.x;
+		this.x = objects[this.i].vec2.x + this.data.point.x;
 
 		//the adjusted y coord of the graphics object relative to the Entites position
-		this.y = objects[this.i].vec2.y + this.data.y;
-
+		this.y = objects[this.i].vec2.y + this.data.point.y;
 
 		if(this.data.type === testgame.util.TYPE_REC){
 
@@ -163,10 +161,9 @@ testgame.Canvas.prototype.renderObjects = function(objects){
 			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
 			this.bufferContext.fillRect(this.x, this.y, this.data.width, this.data.height);
 		}else if(this.data.type === testgame.util.TYPE_CIR){
-
 			//Renders a circle
 			this.bufferContext.beginPath();
-			this.bufferContext.arc(this.x, this.y, this.data.radius, 0, 2*Math.PI);
+			this.bufferContext.arc(this.x+this.data.radius, this.y+this.data.radius, this.data.radius, 0, 2*Math.PI);
 			this.bufferContext.closePath();
 			this.bufferContext.fillStyle = this.processColour(this.data.colour, this.x, this.y);
 			this.bufferContext.fill();
