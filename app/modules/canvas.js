@@ -67,6 +67,7 @@ testgame.Canvas = function(width, height, canvasID){
 	this.buffer.height = this.height;
 
 	//variables used in game loop to prevent redeclaring variables each time
+	this.data = null;
 	this.shapes = null;
 	this.shape = null;
 	this.grad = null;
@@ -84,7 +85,7 @@ testgame.Canvas.prototype.constructor = testgame.Canvas;
 * @method testgame.Canvas#render
 * @param { Array } array of all entities in the game
 */
-testgame.Canvas.prototype.render = function(objects){
+testgame.Canvas.prototype.render = function(sets, entities){
 	'use strict';
 	//clear
 	this.bufferContext.fillStyle = testgame.settings.clearClr;
@@ -93,7 +94,7 @@ testgame.Canvas.prototype.render = function(objects){
 	//this.bufferContext.setTransform(1,0,0,1,0,0);
 
 	//render basic objects
-	this.renderObjects(objects);
+	this.renderObjects(sets, entities);
 
 	//render buffer
 	this.context.drawImage(this.buffer, 0, 0);
@@ -139,47 +140,50 @@ testgame.Canvas.prototype.processColour = function(colourObj, x, y){
 * @method testgame.Canvas#renderObjects
 * @param { Array } array of all entities in the game
 */
-testgame.Canvas.prototype.renderObjects = function(objects){
+testgame.Canvas.prototype.renderObjects = function(sets, entities){
 	'use strict';
 	//console.log(objects);
-	for(var i = 0; i < objects.length; i++){
+	for(var i = 0; i < sets.length; i++){
+		for(var j = 0; j < entities[sets[i]].entityNames.length; j++){
+			this.data = entities[sets[i]][entities[sets[i]].entityNames[j]];
 
-		if(!objects[i].renders){
-			continue;
-		}
-
-		//captures each objects data
-		for(var j = 0;  j < objects[i].shapes.length; j++){
-
-			this.shape = objects[i].shapes[j];
-
-			if(this.shape.isReleativePos){
-				//the adjusted x coord of the graphics object relative to the Entites position
-				this.x = objects[i].vec2.x + this.shape.point.x;
-
-				//the adjusted y coord of the graphics object relative to the Entites position
-				this.y = objects[i].vec2.y + this.shape.point.y;
-			}else{
-				//the adjusted x coord of the graphics object relative to the Entites position
-				this.x = this.shape.point.x;
-
-				//the adjusted y coord of the graphics object relative to the Entites position
-				this.y = this.shape.point.y;
+			if(!this.data.renders){
+				continue;
 			}
 
-			switch(this.shape.type){
-				case testgame.util.TYPE_REC:
-					this.renderRectangle();
-					break;
-				case testgame.util.TYPE_CIR:
-					this.renderCircle();
-					break;
-				case testgame.util.TYPE_RREC:
-					this.renderRoundRectangle();
-					break;
-				case testgame.util.TYPE_TEXT:
-					this.renderText();
-					break;
+			//captures each objects data
+			for(var n = 0;  n < this.data.shapes.length; n++){
+
+				this.shape = this.data.shapes[n];
+
+				if(this.shape.isReleativePos){
+					//the adjusted x coord of the graphics object relative to the Entites position
+					this.x = this.data.vec2.x + this.shape.point.x;
+
+					//the adjusted y coord of the graphics object relative to the Entites position
+					this.y = this.data.vec2.y + this.shape.point.y;
+				}else{
+					//the adjusted x coord of the graphics object relative to the Entites position
+					this.x = this.shape.point.x;
+
+					//the adjusted y coord of the graphics object relative to the Entites position
+					this.y = this.shape.point.y;
+				}
+
+				switch(this.shape.type){
+					case testgame.util.TYPE_REC:
+						this.renderRectangle();
+						break;
+					case testgame.util.TYPE_CIR:
+						this.renderCircle();
+						break;
+					case testgame.util.TYPE_RREC:
+						this.renderRoundRectangle();
+						break;
+					case testgame.util.TYPE_TEXT:
+						this.renderText();
+						break;
+				}
 			}
 		}
 	}

@@ -47,17 +47,6 @@ testgame.settings = {
 */
 testgame.game = (function(){
 	'use strict';
-
-	/**
-	* @property { Array } - holds all game entities
-	*/
-	var	entities = [];
-
-	/**
-	* @property { number } - pre declared counter for loops, to prevent extra garbage
-	*/
-	var	i = 0;
-
 	/**
 	* @property { boolean } - hold if the window has focus or not
 	*/
@@ -86,23 +75,28 @@ testgame.game = (function(){
 		testgame.input.addKeyMap(testgame.input.Keyboard.D, "right");
 		testgame.input.addKeyMap(testgame.input.Keyboard.RIGHT, "right");
 
+		testgame.input.addKeyMap(testgame.input.Keyboard.Q, "remove");
+
 		var grad1 = new testgame.util.Gradient(75,75,10,10,75,75).addColour(0,'#086a10').addColour(0.5, '#ffffff').addColour(1,'#086a10'),
 			grad2 = new testgame.util.Gradient(0,0,50,0).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616');
-		entities.push(new testgame.Entity(25, 550, [new testgame.Circle(0,10,25,'#821616')], testgame.settings.speed));
-		entities.push(new testgame.Entity(67, 543, [new testgame.Circle(0,0,25,'#821616')], testgame.settings.speed));
-		entities.push(new testgame.Entity(63, 73, [new testgame.Circle(0,0,25,'#821616')], testgame.settings.speed));
-		entities.push(new testgame.Entity(125, 123, [new testgame.Circle(0,0,25,'#821616')], testgame.settings.speed));
 
-		entities.push(new testgame.Entity(225, 410, [new testgame.Rectangle(0,25,50,50,grad2)], testgame.settings.speed));
-		entities.push(new testgame.Entity(350, 345, [new testgame.Rectangle(0,0,50,50,'#821616')], testgame.settings.speed));
+		testgame.entityManager.addSet("player");
+		testgame.entityManager.addEntitiy("player", "player1", new testgame.Player(75, 432, 10).addShape(new testgame.RoundRectangle(0,0,50,50,10,'#086a10')).addShape(new testgame.Circle(0,25,25,'#086a10')));
 
-		entities.push(new testgame.Player(75, 432, [
-			new testgame.RoundRectangle(0,0,50,50,10,'#086a10'),
-			new testgame.Circle(0,25,25,'#086a10')
-		], 10));
-		entities.push(new testgame.Entity(140, 200, [new testgame.RoundRectangle(0,0,50,50,10,'#821616')], testgame.settings.speed));
+		var setname = "objects";
+		testgame.entityManager.addSet(setname);
+		testgame.entityManager.addEntitiy(setname, "circ1", new testgame.Entity(25, 550, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "circ2", new testgame.Entity(67, 543, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "circ3", new testgame.Entity(63, 73, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "circ4", new testgame.Entity(125, 123, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
 
-		entities.push(new testgame.Entity(0, 0, [new testgame.Text(20, 20, "test")], 0));
+		testgame.entityManager.addEntitiy(setname, "rec1", new testgame.Entity(225, 410, testgame.settings.speed).addShape(new testgame.Rectangle(0,25,50,50,grad2)));
+		testgame.entityManager.addEntitiy(setname, "rec2", new testgame.Entity(350, 345, testgame.settings.speed).addShape(new testgame.Rectangle(0,25,50,50,'#821616')));
+
+		testgame.entityManager.addEntitiy(setname, "rrec1", new testgame.Entity(140, 200, testgame.settings.speed).addShape(new testgame.RoundRectangle(0,0,50,50,10,'#821616')));
+
+		testgame.entityManager.addEntitiy(setname, "text1", new testgame.Entity(0, 0, testgame.settings.speed).addShape(new testgame.Text(20, 20, "test")));
+		testgame.entityManager.entities.objects.text1.moves = false;
 	};
 
 	/**
@@ -112,12 +106,7 @@ testgame.game = (function(){
 	*/
 	var	preUpdate = function(){
 		testgame.input.tickAll();
-
-		i=0;
-		//looping through all entities
-		for(; i < entities.length; i++){
-			entities[i].preUpdate();
-		}
+		testgame.entityManager.preUpdate();
 	};
 
 	/**
@@ -126,11 +115,7 @@ testgame.game = (function(){
 	* @method testgame.game#update
 	*/
 	var update = function(){
-		i=0;
-		//looping through all entities
-		for(; i < entities.length; i++){
-			entities[i].update();
-		}
+		testgame.entityManager.update();
 	};
 
 	/**
@@ -139,11 +124,10 @@ testgame.game = (function(){
 	* @method testgame.game#postUpdate
 	*/
 	var	postUpdate = function(){
-		i=0;
+		testgame.entityManager.postUpdate();
 
-		//looping through all entities
-		for(; i < entities.length; i++){
-			entities[i].postUpdate();
+		if(testgame.input.wasPressed("remove")){
+			testgame.entityManager.entities.player.player1.removeShape(1);
 		}
 	};
 
@@ -153,7 +137,7 @@ testgame.game = (function(){
 	* @method testgame.game#draw
 	*/
 	var draw = function(){
-		canvas.render(entities);
+		canvas.render(testgame.entityManager.sets, testgame.entityManager.entities);
 	};
 
 	/**

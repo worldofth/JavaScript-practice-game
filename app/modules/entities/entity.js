@@ -16,7 +16,7 @@ var testgame = testgame || {};
 * @param { Object } graphicsObject - the rendering object
 * @param { number } speed - inital rate of movement
 */
-testgame.Entity = function(x, y, shapes, speed){
+testgame.Entity = function(x, y, speed, shapes){
 	'use strict';
 
 	/**
@@ -54,6 +54,8 @@ testgame.Entity = function(x, y, shapes, speed){
 	*/
 	this.shapes = shapes || [];
 
+	this.toDelete = false;
+
 	this.bound = null;
 };
 
@@ -80,9 +82,9 @@ testgame.Entity.prototype.addShape = function(shape){
 * @param { object } shape - shape object to be rendered or used for collision
 * @chainable
 */
-testgame.Entity.prototype.removeShape = function(shape){
+testgame.Entity.prototype.removeShape = function(shapeindex){
 	'use strict';
-	this.shapes.slice(this.shapes.indexOf(shape), 1);
+	this.shapes.splice(shapeindex, 1);
 	return this;
 };
 

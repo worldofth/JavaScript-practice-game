@@ -17,11 +17,11 @@ var testgame = testgame || {};
 * @param { Object } graphicsObject - the rendering object
 * @param { number } speed - inital rate of movement
 */
-testgame.Player = function(x, y, graphicsObject, speed){
+testgame.Player = function(x, y, speed, shapes){
 	'use strict';
 
 	//calls Entity constructor
-	testgame.Entity.call(this, x, y, graphicsObject, speed);
+	testgame.Entity.call(this, x, y, speed, shapes);
 	this.vec2.vx = 0;
 	this.vec2.vy = 0;
 };
