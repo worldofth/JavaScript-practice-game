@@ -7,26 +7,26 @@
 */
 var testgame = testgame || {};
 
-testgame.entityManager = (function(){
+(function(){
 	'use strict';
 
-	var entities = {};
-	var sets = [];
+	var entities = {},
+	sets = [],
 
-	var addSet = function(name){
+	addSet = function(name){
 		sets.push(name);
 		entities[name] = {};
 		entities[name].entityNames = [];
-	};
+	},
 
-	var removeSet = function(name){
+	removeSet = function(name){
 		if(sets.indexOf(name) !== -1){
 		   	sets.splice(sets.indexOf(name), 1);
 			delete entities[name];
 		}
-	};
+	},
 
-	var addEntitiy = function(setname, entityname, entity){
+	addEntitiy = function(setname, entityname, entity){
 		if(sets.indexOf(setname) === -1){
 			throw new Error("No entity set was found using the name: "+setname);
 		}
@@ -36,9 +36,9 @@ testgame.entityManager = (function(){
 
 		entities[setname].entityNames.push(entityname);
 		entities[setname][entityname] = entity;
-	};
+	},
 
-	var removeEntity = function(setname, entityname){
+	removeEntity = function(setname, entityname){
 		if(sets.indexOf(setname) === -1){
 			throw new Error("No entity set was found using the name: "+setname);
 		}
@@ -47,9 +47,9 @@ testgame.entityManager = (function(){
 		}
 		entities[setname].entityNames.splice(entities[setname].entityNames.indexOf(entityname), 1);
 		delete entities[setname][entityname];
-	};
+	},
 
-	var preUpdate = function(){
+	preUpdate = function(){
 		for(var i = 0; i < sets.length; i++){
 			for(var j = 0; j < entities[sets[i]].entityNames.length; j++){
 				if(entities[sets[i]][entities[sets[i]].entityNames[j]].toDelete){
@@ -59,18 +59,18 @@ testgame.entityManager = (function(){
 				entities[sets[i]][entities[sets[i]].entityNames[j]].preUpdate();
 			}
 		}
-	};
+	},
 
-	var postUpdate = function(){
+	postUpdate = function(){
 		for(var i = 0; i < sets.length; i++){
 			for(var j = 0; j < entities[sets[i]].entityNames.length; j++){
 				entities[sets[i]][entities[sets[i]].entityNames[j]].postUpdate();
 			}
 		}
-	};
+	},
 
 
-	var update = function(){
+	update = function(){
 		for(var i = 0; i < sets.length; i++){
 			for(var j = 0; j < entities[sets[i]].entityNames.length; j++){
 				entities[sets[i]][entities[sets[i]].entityNames[j]].update();
@@ -78,7 +78,7 @@ testgame.entityManager = (function(){
 		}
 	};
 
-	return{
+	testgame.entityManager = {
 		entities: entities,
 		sets: sets,
 		addSet: addSet,
@@ -89,6 +89,5 @@ testgame.entityManager = (function(){
 		postUpdate: postUpdate,
 		update: update
 	};
-
 
 }());

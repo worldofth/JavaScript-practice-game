@@ -7,37 +7,41 @@
 */
 var testgame = testgame || {};
 
-/**
-* @class testgame.settings
-* @classdesc settings hold the intial parameters of the game, starting off with defaults
-* @static
-*/
-testgame.settings = {
-	/**
-	* @property { string } - DOM ID for the canvas element
-	*/
-	"canvasID": 'canvas',
+(function(testgame){
+    'use strict';
+    /**
+    * @class testgame.settings
+    * @classdesc settings hold the intial parameters of the game, starting off with defaults
+    * @static
+    */
+    testgame.settings = {
+        /**
+        * @property { string } - DOM ID for the canvas element
+        */
+        "canvasID": 'canvas',
 
-	/**
-	* @property { number } - initial canvas width
-	*/
-	"width": 800,
+        /**
+        * @property { number } - initial canvas width
+        */
+        "width": 800,
 
-	/**
-	* @property { number } - intial canvas height
-	*/
-	"height": 600,
+        /**
+        * @property { number } - intial canvas height
+        */
+        "height": 600,
 
-	/**
-	* @property { string } - intial canvas clear colour
-	*/
-	"clearClr": '#efefef',
+        /**
+        * @property { string } - intial canvas clear colour
+        */
+        "clearClr": '#efefef',
 
-	/**
-	* @property { number } - intial global max speed
-	*/
-	"speed": 3
-};
+        /**
+        * @property { number } - intial global max speed
+        */
+        "speed": 3
+    };
+}(testgame));
+
 
 /**
 * @class testgame.game
@@ -45,24 +49,24 @@ testgame.settings = {
 * @static
 * @return { Object } - returns the public interface to the game object
 */
-testgame.game = (function(){
+(function(){
 	'use strict';
 	/**
 	* @property { boolean } - hold if the window has focus or not
 	*/
-	var focused = true;
+	var focused = true,
 
 	/**
 	* @property { Object } - create and holds the games canvas
 	*/
-	var canvas = new testgame.Canvas();
+	canvas = new testgame.Canvas(),
 
 	/**
 	* The intialize function which sets up the game using the intial settings
 	*
 	* @method testgame.game#init
 	*/
-	var	init = function(){
+	init = function(){
 		testgame.input.addKeyMap(testgame.input.Keyboard.W, "up");
 		testgame.input.addKeyMap(testgame.input.Keyboard.UP, "up");
 
@@ -97,55 +101,55 @@ testgame.game = (function(){
 
 		testgame.entityManager.addEntitiy(setname, "text1", new testgame.Entity(0, 0, testgame.settings.speed).addShape(new testgame.Text(20, 20, "test")));
 		testgame.entityManager.entities.objects.text1.moves = false;
-	};
+	},
 
 	/**
 	* The update before the main update
 	*
 	* @method testgame.game#preUpdate
 	*/
-	var	preUpdate = function(){
+	preUpdate = function(){
 		testgame.input.tickAll();
 		testgame.entityManager.preUpdate();
-	};
+	},
 
 	/**
 	* The Main update
 	*
 	* @method testgame.game#update
 	*/
-	var update = function(){
+	update = function(){
 		testgame.entityManager.update();
-	};
+	},
 
 	/**
 	* The update after the main update
 	*
 	* @method testgame.game#postUpdate
 	*/
-	var	postUpdate = function(){
+	postUpdate = function(){
 		testgame.entityManager.postUpdate();
 
 		if(testgame.input.wasPressed("remove")){
 			testgame.entityManager.entities.player.player1.removeShape(1);
 		}
-	};
+	},
 
 	/**
 	* calls the draw function with all the entities
 	*
 	* @method testgame.game#draw
 	*/
-	var draw = function(){
+	draw = function(){
 		canvas.render(testgame.entityManager.sets, testgame.entityManager.entities);
-	};
+	},
 
 	/**
 	* The main game loop, running all the updates and draw calls
 	*
 	* @method testgame.game#run
 	*/
-	var run = (function(){
+	run = (function(){
 		var loops = 0,
 			fps = 60,
 			skipTicks = (1000 / fps),
@@ -176,7 +180,7 @@ testgame.game = (function(){
 	*
 	* @return { Object } - public interface for the game object
 	*/
-	return {
+	testgame.game = {
 		"run": run,
 		"init": init,
 		"focused": focused

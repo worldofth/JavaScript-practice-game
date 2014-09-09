@@ -46,10 +46,10 @@ var testgame = testgame || {};
 * @classdesc a closure namespace for util objects
 * @static
 */
-testgame.util = (function(){
-	'use strict';
+(function(testgame){
+    'use strict';
 
-	/**
+    /**
 	* @class testgame.util.Vec2
 	* @classdesc holds the position and velocity of an object
 	* @constructor
@@ -83,25 +83,35 @@ testgame.util = (function(){
 	//constructor
 	Vec2.prototype.constructor = Vec2;
 
-	/**
-	* updates the x and y position based on the velocities
-	*
-	* @method testgame.util.Vec2#update
-	*/
-	Vec2.prototype.update = function(){
-		this.x += this.vx;
-		this.y += this.vy;
-	};
 
-	/**
-	* clones a Vec2, returning a new copy of this object
-	*
-	* @method testgame.util.Vec2#clone
-	* @return { Object } - returns a copy of this Vec2
-	*/
-	Vec2.prototype.clone = function(){
-		return new Vec2(this.x, this.y);
-	};
+	Vec2.prototype = (function(){
+        /**
+        * updates the x and y position based on the velocities
+        *
+        * @method testgame.util.Vec2#update
+        */
+        var update = function(){
+            this.x += this.vx;
+            this.y += this.vy;
+        },
+
+        /**
+        * clones a Vec2, returning a new copy of this object
+        *
+        * @method testgame.util.Vec2#clone
+        * @return { Object } - returns a copy of this Vec2
+        */
+        clone = function(){
+            return new Vec2(this.x, this.y);
+        };
+
+        return{
+            update: update,
+            clone: clone
+        };
+
+    }());
+
 
 	/**
 	* @class testgame.util.Point
@@ -191,39 +201,48 @@ testgame.util = (function(){
 	//constructor
 	Gradient.prototype.constructor = Gradient;
 
-	/**
-	* clones a Gradient object, returning a new copy of this object
-	*
-	* @method testgame.util.Gradient#clone
-	* @return { Object } - returns a copy of this Gradient
-	*/
-	Gradient.prototype.clone = function(){
-		return new Gradient(this.x, this.y, this.x1, this.y1, this.r, this.r1, this.colours);
-	};
 
-	/**
-	* adds a colour to the colour lists, each element holds a position (0-1) and a
-	* string colour, hex or rgb
-	*
-	* @method testgame.util.Gradient#addColour
-	* @param { number } pos - a number between 0 - 1 pertaining to the colour's position in the gradient
-	* @param { string } colour - either a hex string to a rgb
-	* @chainable
-	* @return { Object } - returns this for chain calls
-	*/
-	Gradient.prototype.addColour = function(pos, colour){
-		pos = pos > 1 ? 1 : pos;
-		this.colours.push({ "pos": pos, "colour" : colour });
-		return this;
-	};
+	Gradient.prototype = (function(){
+        /**
+        * clones a Gradient object, returning a new copy of this object
+        *
+        * @method testgame.util.Gradient#clone
+        * @return { Object } - returns a copy of this Gradient
+        */
+        var clone = function(){
+            return new Gradient(this.x, this.y, this.x1, this.y1, this.r, this.r1, this.colours);
+        },
 
-	/**
+        /**
+        * adds a colour to the colour lists, each element holds a position (0-1) and a
+        * string colour, hex or rgb
+        *
+        * @method testgame.util.Gradient#addColour
+        * @param { number } pos - a number between 0 - 1 pertaining to the colour's position in the gradient
+        * @param { string } colour - either a hex string to a rgb
+        * @chainable
+        * @return { Object } - returns this for chain calls
+        */
+        addColour = function(pos, colour){
+            pos = pos > 1 ? 1 : pos;
+            this.colours.push({ "pos": pos, "colour" : colour });
+            return this;
+        };
+
+        return {
+            clone: clone,
+            addColour: addColour
+        };
+
+    }());
+
+    /**
 	* defines the public interface to the util object, all other methods
 	* are private inside the util closure.
 	*
 	* @return { Object } - public interface for the util object
 	*/
-	return {
+	testgame.util = {
 		//graphic object types
 		"TYPE_REC" 	: "Rectangle",
 		"TYPE_CIR" 	: "Circle",
@@ -235,4 +254,4 @@ testgame.util = (function(){
 		"Point"		: Point,
 		"Gradient" 	: Gradient
 	};
-}());
+}(testgame));

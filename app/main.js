@@ -7,7 +7,6 @@ window.onload = function(){
 	window.onEachFrame(testgame.game.run);
 };
 
-
 window.addEventListener("focus", function() {
 	'use strict';
 	testgame.game.focused = true;

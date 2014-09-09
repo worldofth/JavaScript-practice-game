@@ -13,7 +13,7 @@ var testgame = testgame || {};
 * @classdesc input manager for the game, holding all the logic for handling keys presses
 * @static
 */
-testgame.input = (function(){
+(function(testgame){
 	'use strict';
 
 	/**
@@ -43,44 +43,55 @@ testgame.input = (function(){
 	//constructor
 	Key.prototype.constructor = Key;
 
-	/**
-	* an update tick, updating the keys status
-	*
-	* @method testgame.input.Key#tick
-	*/
-	Key.prototype.tick = function(){
-		this._wasDown = this._isDown;
-		this._isDown = this.nextState;
-	};
 
-	/**
-	* returns true is the key has been pressed
-	*
-	* @method testgame.input.Key#wasPressed
-	* @return { boolean }
-	*/
-	Key.prototype.wasPressed = function(){
-		return !this._wasDown && this._isDown;
-	};
+	Key.prototype = (function(){
+        /**
+        * an update tick, updating the keys status
+        *
+        * @method testgame.input.Key#tick
+        */
+        var tick = function(){
+            this._wasDown = this._isDown;
+            this._isDown = this.nextState;
+        },
 
-	/**
-	* returns true is the key has been released
-	*
-	* @method testgame.input.Key#wasReleased
-	* @return { boolean }
-	*/
-	Key.prototype.wasReleased = function(){
-		return this._wasDown && !this._isDown;
-	};
+        /**
+        * returns true is the key has been pressed
+        *
+        * @method testgame.input.Key#wasPressed
+        * @return { boolean }
+        */
+        wasPressed = function(){
+            return !this._wasDown && this._isDown;
+        },
 
-	/**
-	* sets the key to be released, this is used for when the game is paused
-	*
-	* @method testgame.input.Key#release
-	*/
-	Key.prototype.release = function(){
-		this.nextState = false;
-	};
+        /**
+        * returns true is the key has been released
+        *
+        * @method testgame.input.Key#wasReleased
+        * @return { boolean }
+        */
+        wasReleased = function(){
+            return this._wasDown && !this._isDown;
+        },
+
+        /**
+        * sets the key to be released, this is used for when the game is paused
+        *
+        * @method testgame.input.Key#release
+        */
+        release = function(){
+            this.nextState = false;
+        };
+
+        return{
+            tick: tick,
+            wasPressed: wasPressed,
+            wasReleased: wasReleased,
+            release: release
+        };
+
+    }());
 
 	/**
 	* @class testgame.input.Keys
@@ -88,170 +99,185 @@ testgame.input = (function(){
 	* @static
 	* @constructor
 	*/
-	var Keys = {};
+	var Keys = (function(Key){
 
-	/**
-	* @property { Object } - an array like mapping of action names to key object
-	*/
-	Keys.actionKeys = {};
+        /**
+        * @property { Object } - an array like mapping of action names to key object
+        */
+        var actionKeys = {},
 
-	/**
-	* @property { Object } - an array like mapping of keycodes to action names
-	*/
-	Keys.keyMap = {};
+        /**
+        * @property { Object } - an array like mapping of keycodes to action names
+        */
+        keyMap = {},
 
-	/**
-	* adds an action name to the action keys, and creates a new key object
-	*
-	* @method testgame.input.Keys#addAction
-	*/
-	Keys.addAction =function(actionName){
-			Keys.actionKeys[actionName]	= new Key();
-	};
+        /**
+        * adds an action name to the action keys, and creates a new key object
+        *
+        * @method testgame.input.Keys#addAction
+        */
+        addAction =function(actionName){
+                Keys.actionKeys[actionName]	= new Key();
+        },
 
-	/**
-	* adds an keycode map, if the action name doesn't exist it called addAction
-	*
-	* @method testgame.input.Keys#addKeyMap
-	*/
-	Keys.addKeyMap = function(keycode, actionName){
-		if(!Keys.actionKeys[actionName]){
-			Keys.addAction(actionName);
-		}
-		Keys.keyMap[keycode] = actionName;
-	};
+        /**
+        * adds an keycode map, if the action name doesn't exist it called addAction
+        *
+        * @method testgame.input.Keys#addKeyMap
+        */
+        addKeyMap = function(keycode, actionName){
+            if(!Keys.actionKeys[actionName]){
+                Keys.addAction(actionName);
+            }
+            Keys.keyMap[keycode] = actionName;
+        },
 
-	/**
-	* ticks all the keys to update thier status during an update call
-	*
-	* @method testgame.input#tickAll
-	*/
-	var tickAll = function(){
-		for(var key in Keys.actionKeys){
-			Keys.actionKeys[key].tick();
-		}
-		return this;
-	};
+        /**
+        * ticks all the keys to update thier status during an update call
+        *
+        * @method testgame.input#tickAll
+        */
+        tickAll = function(){
+            for(var key in Keys.actionKeys){
+                Keys.actionKeys[key].tick();
+            }
+            return this;
+        },
 
-	/**
-	* releases all the keys
-	*
-	* @method testgame.input#releaseAll
-	*/
-	var releaseAll = function(){
-		for(var key	in Keys.actionKeys){
-			Keys.actionKeys[key].release();
-		}
-		return this;
-	};
+        /**
+        * releases all the keys
+        *
+        * @method testgame.input#releaseAll
+        */
+        releaseAll = function(){
+            for(var key	in Keys.actionKeys){
+                Keys.actionKeys[key].release();
+            }
+            return this;
+        },
 
-	/**
-	* returns if an action key has been pressed
-	*
-	* @method testgame.input#wasPressed
-	* @return { boolean }
-	*/
-	var wasPressed = function(actionName){
-		return Keys.actionKeys[actionName].wasPressed();
-	};
+        /**
+        * returns if an action key has been pressed
+        *
+        * @method testgame.input#wasPressed
+        * @return { boolean }
+        */
+        wasPressed = function(actionName){
+            return Keys.actionKeys[actionName].wasPressed();
+        },
 
-	/**
-	* returns if an action key has been released
-	*
-	* @method testgame.input#wasReleased
-	* @return { boolean }
-	*/
-	var wasReleased = function(actionName){
-		return Keys.actionKeys[actionName].wasReleased();
-	};
+        /**
+        * returns if an action key has been released
+        *
+        * @method testgame.input#wasReleased
+        * @return { boolean }
+        */
+        wasReleased = function(actionName){
+            return Keys.actionKeys[actionName].wasReleased();
+        },
 
-	/**
-	* on key down callback method, setting the next state of a
-	* key based on the keycode that was pressed
-	*
-	* @method testgame.input#_onKeyDown
-	* @private
-	*/
-	var _onKeyDown = function(event){
-		if(Keys.keyMap[event.keyCode]){
-			Keys.actionKeys[Keys.keyMap[event.keyCode]].nextState = true;
+        /**
+        * on key down callback method, setting the next state of a
+        * key based on the keycode that was pressed
+        *
+        * @method testgame.input#_onKeyDown
+        * @private
+        */
+        onKeyDown = function(event){
+            if(Keys.keyMap[event.keyCode]){
+                Keys.actionKeys[Keys.keyMap[event.keyCode]].nextState = true;
 
-		}
-	};
+            }
+        },
 
-	/**
-	* on key up callback method, setting the next state of a
-	* key based on the keycode that was released
-	*
-	* @method testgame.input#_onKeyUp
-	* @private
-	*/
-	var _onKeyUp = function(event){
-		if(Keys.keyMap[event.keyCode]){
-			Keys.actionKeys[Keys.keyMap[event.keyCode]].nextState = false;
-		}
-	};
+        /**
+        * on key up callback method, setting the next state of a
+        * key based on the keycode that was released
+        *
+        * @method testgame.input#_onKeyUp
+        * @private
+        */
+        onKeyUp = function(event){
+            if(Keys.keyMap[event.keyCode]){
+                Keys.actionKeys[Keys.keyMap[event.keyCode]].nextState = false;
+            }
+        };
 
-	//key event listeners
-	window.addEventListener('keydown', _onKeyDown, false);
-	window.addEventListener('keyup', _onKeyUp, false);
+        //key event listeners
+        window.addEventListener('keydown', onKeyDown, false);
+        window.addEventListener('keyup', onKeyUp, false);
+
+        return{
+            actionKeys: actionKeys,
+            keyMap: keyMap,
+            addAction: addAction,
+            addKeyMap: addKeyMap,
+            tickAll: tickAll,
+            releaseAll: releaseAll,
+            wasPressed: wasPressed,
+            wasReleased: wasReleased
+        };
+    }(Key));
 
 	//sets the public interface for testgame.input
-	return{
-		"tickAll": tickAll,
-		"releaseAll": releaseAll,
-		"wasPressed": wasPressed,
-		"wasReleased": wasReleased,
+	testgame.input = {
+		"tickAll": Keys.tickAll,
+		"releaseAll": Keys.releaseAll,
+		"wasPressed": Keys.wasPressed,
+		"wasReleased": Keys.wasReleased,
 		"addAction": Keys.addAction,
 		"addKeyMap": Keys.addKeyMap
 	};
-}());
 
-//lists most keycodes for adding key code maps
-testgame.input.Keyboard = {};
-testgame.input.Keyboard.A = "A".charCodeAt(0);
-testgame.input.Keyboard.B = "B".charCodeAt(0);
-testgame.input.Keyboard.C = "C".charCodeAt(0);
-testgame.input.Keyboard.D = "D".charCodeAt(0);
-testgame.input.Keyboard.E = "E".charCodeAt(0);
-testgame.input.Keyboard.F = "F".charCodeAt(0);
-testgame.input.Keyboard.G = "G".charCodeAt(0);
-testgame.input.Keyboard.H = "H".charCodeAt(0);
-testgame.input.Keyboard.I = "I".charCodeAt(0);
-testgame.input.Keyboard.J = "J".charCodeAt(0);
-testgame.input.Keyboard.K = "K".charCodeAt(0);
-testgame.input.Keyboard.L = "L".charCodeAt(0);
-testgame.input.Keyboard.M = "M".charCodeAt(0);
-testgame.input.Keyboard.N = "N".charCodeAt(0);
-testgame.input.Keyboard.O = "O".charCodeAt(0);
-testgame.input.Keyboard.P = "P".charCodeAt(0);
-testgame.input.Keyboard.Q = "Q".charCodeAt(0);
-testgame.input.Keyboard.R = "R".charCodeAt(0);
-testgame.input.Keyboard.S = "S".charCodeAt(0);
-testgame.input.Keyboard.T = "T".charCodeAt(0);
-testgame.input.Keyboard.U = "U".charCodeAt(0);
-testgame.input.Keyboard.V = "V".charCodeAt(0);
-testgame.input.Keyboard.W = "W".charCodeAt(0);
-testgame.input.Keyboard.X = "X".charCodeAt(0);
-testgame.input.Keyboard.Y = "Y".charCodeAt(0);
-testgame.input.Keyboard.Z = "Z".charCodeAt(0);
-testgame.input.Keyboard.ZERO = "0".charCodeAt(0);
-testgame.input.Keyboard.ONE = "1".charCodeAt(0);
-testgame.input.Keyboard.TWO = "2".charCodeAt(0);
-testgame.input.Keyboard.THREE = "3".charCodeAt(0);
-testgame.input.Keyboard.FOUR = "4".charCodeAt(0);
-testgame.input.Keyboard.FIVE = "5".charCodeAt(0);
-testgame.input.Keyboard.SIX = "6".charCodeAt(0);
-testgame.input.Keyboard.SEVEN = "7".charCodeAt(0);
-testgame.input.Keyboard.EIGHT = "8".charCodeAt(0);
-testgame.input.Keyboard.NINE = "9".charCodeAt(0);
-testgame.input.Keyboard.ENTER = 13;
-testgame.input.Keyboard.SHIFT = 16;
-testgame.input.Keyboard.CONTROL = 17;
-testgame.input.Keyboard.ALT = 18;
-testgame.input.Keyboard.ESC = 27;
-testgame.input.Keyboard.SPACEBAR = 32;
-testgame.input.Keyboard.LEFT = 37;
-testgame.input.Keyboard.UP = 38;
-testgame.input.Keyboard.RIGHT = 39;
-testgame.input.Keyboard.DOWN = 40;
+    //lists most keycodes for adding key code maps
+    testgame.input.Keyboard = {
+        A       : "A".charCodeAt(0),
+        B       : "B".charCodeAt(0),
+        C       : "C".charCodeAt(0),
+        D       : "D".charCodeAt(0),
+        E       : "E".charCodeAt(0),
+        F       : "F".charCodeAt(0),
+        G       : "G".charCodeAt(0),
+        H       : "H".charCodeAt(0),
+        I       : "I".charCodeAt(0),
+        J       : "J".charCodeAt(0),
+        K       : "K".charCodeAt(0),
+        L       : "L".charCodeAt(0),
+        M       : "M".charCodeAt(0),
+        N       : "N".charCodeAt(0),
+        O       : "O".charCodeAt(0),
+        P       : "P".charCodeAt(0),
+        Q       : "Q".charCodeAt(0),
+        R       : "R".charCodeAt(0),
+        S       : "S".charCodeAt(0),
+        T       : "T".charCodeAt(0),
+        U       : "U".charCodeAt(0),
+        V       : "V".charCodeAt(0),
+        W       : "W".charCodeAt(0),
+        X       : "X".charCodeAt(0),
+        Y       : "Y".charCodeAt(0),
+        Z       : "Z".charCodeAt(0),
+        ZERO    : "0".charCodeAt(0),
+        ONE     : "1".charCodeAt(0),
+        TWO     : "2".charCodeAt(0),
+        THREE   : "3".charCodeAt(0),
+        FOUR    : "4".charCodeAt(0),
+        FIVE    : "5".charCodeAt(0),
+        SIX     : "6".charCodeAt(0),
+        SEVEN   : "7".charCodeAt(0),
+        EIGHT   : "8".charCodeAt(0),
+        NINE    : "9".charCodeAt(0),
+        ENTER   : 13,
+        SHIFT   : 16,
+        CONTROL : 17,
+        ALT     : 18,
+        ESC     : 27,
+        SPACEBAR: 32,
+        LEFT    : 37,
+        UP      : 38,
+        RIGHT   : 39,
+        DOWN    : 40
+    };
+
+}(testgame));
+
