@@ -2,11 +2,7 @@
 * @author Tom Hopkins https://github.com/worldofth
 */
 
-/**
-* engine namespace
-*/
-var testgame = testgame || {};
-/* globals window */
+/* globals window, testgame */
 
 /**
 * @class testgame.input

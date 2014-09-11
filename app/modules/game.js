@@ -1,11 +1,8 @@
+/* globals testgame */
+
 /**
 * @author Tom Hopkins https://github.com/worldofth
 */
-
-/**
-* engine namespace
-*/
-var testgame = testgame || {};
 
 (function(testgame){
     'use strict';
@@ -49,7 +46,7 @@ var testgame = testgame || {};
 * @static
 * @return { Object } - returns the public interface to the game object
 */
-(function(){
+(function(testgame){
 	'use strict';
 	/**
 	* @property { boolean } - hold if the window has focus or not
@@ -185,4 +182,4 @@ var testgame = testgame || {};
 		"init": init,
 		"focused": focused
 	};
-}());
+}(testgame));

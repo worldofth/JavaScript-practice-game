@@ -1,13 +1,8 @@
-/* globals document */
+/* globals document, testgame */
 
 /**
 * @author Tom Hopkins https://github.com/worldofth
 */
-
-/**
-* engine namespace
-*/
-var testgame = testgame || {};
 
 (function(testgame){
     'use strict';

@@ -1,0 +1,18 @@
+{
+	"tags": {
+		"allowUnknownTags": true
+	},
+	"source": {
+		"include": ["app/modules/", "app/modules/entities/", "app/modules/shapes/"],
+		"includePattern": ".+\\.js(doc)?$"
+	},
+	"templates": {
+		"cleverLinks": false,
+		"monospaceLinks": false
+	},
+	"opts": {
+		"destination": "docs/",
+		"recurse": true,
+		"private": true
+	}
+}
