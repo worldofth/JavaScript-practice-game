@@ -1,9 +1,15 @@
 /* globals document, testgame */
 
 /**
-* @author Tom Hopkins https://github.com/worldofth
+* @author Tom Hopkins [https://github.com/worldofth]
+* @file game and settings
+* @version 1.0.0
 */
 
+/**
+* settings for the game
+* @module testgame.Canvas
+*/
 (function(testgame){
     'use strict';
 
@@ -11,10 +17,11 @@
     * @class testgame.Canvas
     * @classdesc Controls everything to do with the canvas, this includes all the
     *  rendering attributes of the canvas
-    * @constructor
+    * @constructs Canvas
     * @param { number } width - width of the canvas
     * @param { number } height - height of the canvas
     * @param { string } canvasID - the DOM id of the canvas
+    * @public
     */
     var Canvas = function(width, height, canvasID, clrClr){
 
@@ -22,19 +29,19 @@
 
         /**
         * @property { number } - width of the canvas
-        * @default 800px
+        * @default [800px]
         */
         this.width = width || 800;
 
         /**
         * @property { number } - height of the canvas
-        * @default 600px
+        * @default [600px]
         */
         this.height = height || 600;
 
         /**
         * @property { HTMLElement } - html element of the canvas
-        * @default id set to settings canvasID if not 'canvas'
+        * @default [#canvas]
         */
         this.canvas = document.getElementById(canvasID || testgame.settings.canvasID || 'canvas');
 

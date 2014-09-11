@@ -1,13 +1,14 @@
-/**
-* @author Tom Hopkins https://github.com/worldofth
-*/
-
 /* globals window, testgame */
 
 /**
-* @class testgame.input
-* @classdesc input manager for the game, holding all the logic for handling keys presses
-* @static
+* @author Tom Hopkins [https://github.com/worldofth]
+* @file input manager
+* @version 1.0.0
+*/
+
+/**
+* Input manager
+* @module testgame.input
 */
 (function(testgame){
 	'use strict';
@@ -15,7 +16,9 @@
 	/**
 	* @class testgame.input.Key
 	* @classdesc object which holds a key's current status
-	* @constructor
+    * @inner
+    * @private
+	* @constructs Key
 	*/
 	var Key = function(){
 		/**
@@ -80,6 +83,9 @@
             this.nextState = false;
         };
 
+        /**
+        * @exports public functions
+        */
         return{
             tick: tick,
             wasPressed: wasPressed,
@@ -90,20 +96,22 @@
     }());
 
 	/**
-	* @class testgame.input.Keys
-	* @classdesc holds all the key objects and mappings
-	* @static
-	* @constructor
+    * holds all the key objects and mappings
+    *
+	* @module testgame.input.Keys
+    * @param { Key } key - passing key referance for module to use
 	*/
 	var Keys = (function(Key){
 
         /**
         * @property { Object } - an array like mapping of action names to key object
+        * @private
         */
         var actionKeys = {},
 
         /**
         * @property { Object } - an array like mapping of keycodes to action names
+        * @private
         */
         keyMap = {},
 
@@ -111,6 +119,8 @@
         * adds an action name to the action keys, and creates a new key object
         *
         * @method testgame.input.Keys#addAction
+        * @param { string } actionName
+        * @public
         */
         addAction =function(actionName){
                 Keys.actionKeys[actionName]	= new Key();
@@ -120,6 +130,9 @@
         * adds an keycode map, if the action name doesn't exist it called addAction
         *
         * @method testgame.input.Keys#addKeyMap
+        * @param { number } keycode - the keycode of a keyboard key
+        * @param { string } actionName - action name to be linked to keycode
+        * @public
         */
         addKeyMap = function(keycode, actionName){
             if(!Keys.actionKeys[actionName]){
@@ -132,6 +145,7 @@
         * ticks all the keys to update thier status during an update call
         *
         * @method testgame.input#tickAll
+        * @public
         */
         tickAll = function(){
             for(var key in Keys.actionKeys){
@@ -144,6 +158,7 @@
         * releases all the keys
         *
         * @method testgame.input#releaseAll
+        * @public
         */
         releaseAll = function(){
             for(var key	in Keys.actionKeys){
@@ -156,7 +171,9 @@
         * returns if an action key has been pressed
         *
         * @method testgame.input#wasPressed
+        * @param { string } actionName - name of an action
         * @return { boolean }
+        * @public
         */
         wasPressed = function(actionName){
             return Keys.actionKeys[actionName].wasPressed();
@@ -166,7 +183,9 @@
         * returns if an action key has been released
         *
         * @method testgame.input#wasReleased
+        * @param { string } actionName - name of an action
         * @return { boolean }
+        * @public
         */
         wasReleased = function(actionName){
             return Keys.actionKeys[actionName].wasReleased();
@@ -177,6 +196,7 @@
         * key based on the keycode that was pressed
         *
         * @method testgame.input#_onKeyDown
+        * @param { Object } event - key down event object
         * @private
         */
         onKeyDown = function(event){
@@ -191,6 +211,7 @@
         * key based on the keycode that was released
         *
         * @method testgame.input#_onKeyUp
+        * @param { Object } event - key up event object
         * @private
         */
         onKeyUp = function(event){
@@ -203,6 +224,9 @@
         window.addEventListener('keydown', onKeyDown, false);
         window.addEventListener('keyup', onKeyUp, false);
 
+        /**
+        * @exports public functions
+        */
         return{
             actionKeys: actionKeys,
             keyMap: keyMap,
@@ -215,7 +239,9 @@
         };
     }(Key));
 
-	//sets the public interface for testgame.input
+    /**
+    * @exports interface for testgame.input
+    */
 	testgame.input = {
 		"tickAll": Keys.tickAll,
 		"releaseAll": Keys.releaseAll,
@@ -225,7 +251,10 @@
 		"addKeyMap": Keys.addKeyMap
 	};
 
-    //lists most keycodes for adding key code maps
+    /**
+    * @enum keycode enumeration
+    * calculates/sets up most, not all common keycode for the keyboard
+    */
     testgame.input.Keyboard = {
         A       : "A".charCodeAt(0),
         B       : "B".charCodeAt(0),

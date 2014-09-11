@@ -1,9 +1,15 @@
 /* globals testgame */
 
 /**
-* @author Tom Hopkins https://github.com/worldofth
+* @author Tom Hopkins [https://github.com/worldofth]
+* @file game and settings
+* @version 1.0.0
 */
 
+/**
+* settings for the game
+* @module testgame.settings
+*/
 (function(testgame){
     'use strict';
     /**
@@ -41,20 +47,20 @@
 
 
 /**
-* @class testgame.game
-* @classdesc The main holder for the game functionality, contains main loop and all game entities
-* @static
-* @return { Object } - returns the public interface to the game object
+* main game container
+* @module testgame.game
 */
 (function(testgame){
 	'use strict';
 	/**
 	* @property { boolean } - hold if the window has focus or not
+    * @public
 	*/
 	var focused = true,
 
 	/**
-	* @property { Object } - create and holds the games canvas
+	* @property { Canvas } - create and holds the games canvas
+    * @private
 	*/
 	canvas = new testgame.Canvas(),
 
@@ -62,6 +68,7 @@
 	* The intialize function which sets up the game using the intial settings
 	*
 	* @method testgame.game#init
+    * @public
 	*/
 	init = function(){
 		testgame.input.addKeyMap(testgame.input.Keyboard.W, "up");
@@ -104,6 +111,7 @@
 	* The update before the main update
 	*
 	* @method testgame.game#preUpdate
+    * @private
 	*/
 	preUpdate = function(){
 		testgame.input.tickAll();
@@ -114,6 +122,7 @@
 	* The Main update
 	*
 	* @method testgame.game#update
+    * @private
 	*/
 	update = function(){
 		testgame.entityManager.update();
@@ -123,6 +132,7 @@
 	* The update after the main update
 	*
 	* @method testgame.game#postUpdate
+    * @private
 	*/
 	postUpdate = function(){
 		testgame.entityManager.postUpdate();
@@ -136,6 +146,7 @@
 	* calls the draw function with all the entities
 	*
 	* @method testgame.game#draw
+    * @private
 	*/
 	draw = function(){
 		canvas.render(testgame.entityManager.sets, testgame.entityManager.entities);
@@ -145,6 +156,7 @@
 	* The main game loop, running all the updates and draw calls
 	*
 	* @method testgame.game#run
+    * @public
 	*/
 	run = (function(){
 		var loops = 0,
@@ -175,7 +187,7 @@
 	* defines the public interface to the game object, all other methods
 	* are private inside the game closure.
 	*
-	* @return { Object } - public interface for the game object
+	* @exports public interface for the game object
 	*/
 	testgame.game = {
 		"run": run,
