@@ -92,6 +92,7 @@
         *
         * @method testgame.Canvas#render
         * @param { Array } array of all entities in the game
+        * @public
         */
         var render = function(sets, entities){
             //clear
@@ -112,10 +113,11 @@
         * grad based on the buffer context, if it's just a hex string or a rgb string it returns that.
         *
         * @method testgame.Canvas#processColour
-        * @param { Object/String } either a grad object or a colour string
+        * @param { Object|String } either a grad object or a colour string
         * @param { number } x coordinate of the object's location
         * @param { number } y coordinate of the object's location
-        * @return { Object/String } returns created grad object or colour string
+        * @return { Object|String } returns created grad object or colour string
+        * @ private
         */
         processColour = function(colourObj, x, y){
             //if colourObj is not an object return it as it should be a colour string
@@ -145,6 +147,7 @@
         *
         * @method testgame.Canvas#renderObjects
         * @param { Array } array of all entities in the game
+        * @private
         */
         renderObjects = function(sets, entities){
             //console.log(objects);
@@ -176,16 +179,16 @@
                         }
 
                         switch(this.shape.type){
-                            case testgame.util.TYPE_REC:
+                            case testgame.shapes.type.TYPE_REC:
                                 renderRectangle.call(this);
                                 break;
-                            case testgame.util.TYPE_CIR:
+                            case testgame.shapes.type.TYPE_CIR:
                                 renderCircle.call(this);
                                 break;
-                            case testgame.util.TYPE_RREC:
+                            case testgame.shapes.type.TYPE_RREC:
                                 renderRoundRectangle.call(this);
                                 break;
-                            case testgame.util.TYPE_TEXT:
+                            case testgame.shapes.type.TYPE_TEXT:
                                 renderText.call(this);
                                 break;
                         }
@@ -194,11 +197,23 @@
             }
         },
 
+        /**
+        * Renders rectangle objects based on the current selected object
+        *
+        * @method testgame.Canvas#renderRectangle
+        * @private
+        */
         renderRectangle = function(){
             this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
             this.bufferContext.fillRect(this.x, this.y, this.shape.width, this.shape.height);
         },
 
+        /**
+        * Renders circle objects based on the current selected object
+        *
+        * @method testgame.Canvas#renderCircle
+        * @private
+        */
         renderCircle = function(){
             this.bufferContext.beginPath();
             this.bufferContext.arc(this.x+this.shape.radius, this.y+this.shape.radius, this.shape.radius, 0, 2*Math.PI);
@@ -207,6 +222,12 @@
             this.bufferContext.fill();
         },
 
+        /**
+        * Renders round rectangle objects based on the current selected object
+        *
+        * @method testgame.Canvas#renderRoundRectangle
+        * @private
+        */
         renderRoundRectangle = function(){
             //Renders a rounded edge rectangle
             var rx = this.x;
@@ -234,18 +255,29 @@
             this.bufferContext.fill();
         },
 
+        /**
+        * Renders text objects based on the current selected object
+        *
+        * @method testgame.Canvas#renderText
+        * @private
+        */
         renderText = function(){
             this.bufferContext.font = this.shape.font;
             this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
             this.bufferContext.fillText(this.shape.textStr,this.x,this.y);
         };
 
+        /**
+        * @exports public interface for canvas prototype
+        */
         return{
             render: render
         };
     }());
 
-
+    /**
+    * @exports canvas to main namespace
+    */
     testgame.Canvas = Canvas;
 
 }(testgame));

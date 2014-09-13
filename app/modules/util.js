@@ -246,14 +246,6 @@ var testgame = testgame || {};
     * @exports public objects/functions
     */
 	testgame.util = {
-		/**
-        * @enum shapes types
-        */
-		"TYPE_REC" 	: "Rectangle",
-		"TYPE_CIR" 	: "Circle",
-		"TYPE_RREC" : "RoundRectangle",
-		"TYPE_TEXT" : "Text",
-
 		//objects
 		"Vec2" 		: Vec2,
 		"Point"		: Point,

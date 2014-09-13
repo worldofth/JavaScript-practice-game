@@ -1,9 +1,15 @@
 /* globals testgame */
 
 /**
-* @author Tom Hopkins https://github.com/worldofth
+* @author Tom Hopkins [https://github.com/worldofth]
+* @file circle object
+* @version 1.0.0
 */
 
+/**
+* circle object
+* @module testgame.shapes.Circle
+*/
 (function(testgame){
     'use strict';
 
@@ -18,13 +24,13 @@
     */
     var Circle = function(x, y, radius, colour, relpos){
         //calls Shape constructor
-        testgame.Shape.call(this, x, y, colour, relpos);
+        testgame.shapes.Shape.call(this, x, y, colour, relpos);
 
         /**
         * @property { string } - sets the object type used for rendering in the canvas
         * using a util constant
         */
-        this.type = testgame.util.TYPE_CIR;
+        this.type = testgame.shapes.type.TYPE_CIR;
 
         /**
         * @property { number } - sets the intial radius
@@ -52,7 +58,7 @@
     };
 
     //constructor
-    Circle.prototype = Object.create(testgame.Shape.prototype);
+    Circle.prototype = Object.create(testgame.shapes.Shape.prototype);
     Circle.prototype.constructor = Circle;
 
 
@@ -74,21 +80,43 @@
         * @return { Object }
         */
         getBounds = function(){
-            return new testgame.BoundRectangle(this.point.x - this.radius, this.point.y - this.radius, this.width, this.height);
+            return new testgame.shapes.BoundRectangle(this.point.x - this.radius, this.point.y - this.radius, this.width, this.height);
         };
 
-
+        /**
+        * @exports public prototype
+        */
         proto.clone = clone;
         proto.getBounds = getBounds;
 
     }(Circle.prototype));
 
+    /**
+    * checks if two circles intersect ech other
+    *
+    * @method testgame.shapes.Circle#intersects
+    * @param { Circle } a - first rectangle to test
+    * @param { Circle } b - second rectangle to test
+    * @return { boolean } if there is an intersection
+    * @static
+    * @public
+    */
     Circle.intersects = function(a,b){
         var dx = a.point.x - b.point.x;
         var dy = b.point.y - b.point.y;
         return (Math.sqrt(dx*dx + dy*dy) <= (a.radius + b.radius));
     };
 
+    /**
+    * checks if a circle and a rectangle intersect
+    *
+    * @method testgame.shapes.Circle#intersectsRectangle
+    * @param { Circle } c - circle to compare
+    * @param { Rectangle } b - rectangle to compare
+    * @return { boolean } if there is an intersection
+    * @static
+    * @public
+    */
     Circle.intersectsRectangle = function(c,r){
         var cx = Math.abs(c.point.x - r.point.x - r.halfwidth);
         var xdist = r.halfwidth + c.radius;
@@ -117,6 +145,9 @@
         return XCDSq+YCDSq <= maxCornerDist;
     };
 
-    testgame.Circle = Circle;
+    /**
+    * @exports circle to the shapes namespace
+    */
+    testgame.shapes.Circle = Circle;
 
 }(testgame));

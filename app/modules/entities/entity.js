@@ -1,14 +1,21 @@
 /* globals testgame */
 
 /**
-* @author Tom Hopkins https://github.com/worldofth
+* @author Tom Hopkins [https://github.com/worldofth]
+* @file entity object
+* @version 1.0.0
 */
 
+/**
+* Player object
+* @module testgame.entities
+* @module testgame.entities.Entity
+*/
 (function(testgame){
     'use strict';
 
     /**
-    * @class testgame.Entity
+    * @class testgame.entities.Entity
     * @classdesc the main structure to hold diffrent game entities like the npcs, objects and playable characters
     * @constructor
     * @param { number } x - starting x position
@@ -18,13 +25,13 @@
     */
     var Entity = function(x, y, speed, shapes){
         /**
-        * @property { Object } - position object which is used to store and update position
+        * @property { Vec2 } - position object which is used to store and update position
         */
         this.vec2 = new testgame.util.Vec2(x,y);
 
         /**
         * @property { number } - rate of movement
-        * @default 0
+        * @default [0]
         */
         this.speed = speed || 0;
 
@@ -36,25 +43,26 @@
 
         /**
         * @property { boolean } - if the object moves
-        * @default true
+        * @default [true]
         */
         this.moves = true;
 
         /**
         * @property { boolean } - if the renders
-        * @default true
+        * @default [true]
         */
         this.renders = true;
 
         /**
         * @property { Object } - Render objects
-        * @default empty array
+        * @default [ Array ]
         */
         this.shapes = shapes || [];
 
+        /**
+        * @property { boolean } - if the object is set to be deleted
+        */
         this.toDelete = false;
-
-        this.bound = null;
     };
 
     //constructor
@@ -64,7 +72,7 @@
         /**
         * adds a shape to the list
         *
-        * @method testgame.Entity#addShape
+        * @method testgame.entities.Entity#addShape
         * @param { object } shape - shape object to be rendered or used for collision
         * @chainable
         */
@@ -76,7 +84,7 @@
         /**
         * adds a shape to the list
         *
-        * @method testgame.Entity#addShape
+        * @method testgame.entities.Entity#addShape
         * @param { object } shape - shape object to be rendered or used for collision
         * @chainable
         */
@@ -88,7 +96,7 @@
         /**
         * clamps a varible to set bounds
 
-        * @method testgame.Entity#clamp
+        * @method testgame.entities.Entity#clamp
         * @param { number } clamp varible - to be clamped
         * @param { number } min
         * @param { number } max
@@ -107,7 +115,7 @@
         /**
         * The update before the main update
         *
-        * @method testgame.Entity#preUpdate
+        * @method testgame.entities.Entity#preUpdate
         */
         preUpdate = function(){
             if(this.moves){
@@ -136,7 +144,7 @@
         /**
         * The update after the main update
         *
-        * @method testgame.Entity#postUpdate
+        * @method testgame.entities.Entity#postUpdate
         */
         postUpdate = function(){
             if(this.moves){
@@ -148,7 +156,7 @@
         /**
         * The Main update
         *
-        * @method testgame.Entity#update
+        * @method testgame.entities.Entity#update
         */
         update = function(){
             if(this.moves){
@@ -157,6 +165,9 @@
             }
         };
 
+        /**
+        * @exports public prototype
+        */
         return{
             addShape: addShape,
             removeShape: removeShape,
@@ -167,6 +178,10 @@
         };
     }());
 
-    testgame.Entity = Entity;
+    /**
+    * @exports entity to the entities namespace
+    */
+    testgame.entities = {};
+    testgame.entities.Entity = Entity;
 
 }(testgame));

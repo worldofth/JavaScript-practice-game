@@ -89,21 +89,21 @@
 			grad2 = new testgame.util.Gradient(0,0,50,0).addColour(0,'#821616').addColour(0.5, '#ffffff').addColour(1,'#821616');
 
 		testgame.entityManager.addSet("player");
-		testgame.entityManager.addEntitiy("player", "player1", new testgame.Player(75, 432, 10).addShape(new testgame.RoundRectangle(0,0,50,50,10,'#086a10')).addShape(new testgame.Circle(0,25,25,'#086a10')));
+		testgame.entityManager.addEntitiy("player", "player1", new testgame.entities.Player(75, 432, 10).addShape(new testgame.shapes.RoundRectangle(0,0,50,50,10,'#086a10')).addShape(new testgame.shapes.Circle(0,25,25,'#086a10')));
 
 		var setname = "objects";
 		testgame.entityManager.addSet(setname);
-		testgame.entityManager.addEntitiy(setname, "circ1", new testgame.Entity(25, 550, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
-		testgame.entityManager.addEntitiy(setname, "circ2", new testgame.Entity(67, 543, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
-		testgame.entityManager.addEntitiy(setname, "circ3", new testgame.Entity(63, 73, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
-		testgame.entityManager.addEntitiy(setname, "circ4", new testgame.Entity(125, 123, testgame.settings.speed).addShape(new testgame.Circle(0,10,25,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "circ1", new testgame.entities.Entity(25, 550, testgame.settings.speed).addShape(new testgame.shapes.Circle(0,10,25,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "circ2", new testgame.entities.Entity(67, 543, testgame.settings.speed).addShape(new testgame.shapes.Circle(0,10,25,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "circ3", new testgame.entities.Entity(63, 73, testgame.settings.speed).addShape(new testgame.shapes.Circle(0,10,25,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "circ4", new testgame.entities.Entity(125, 123, testgame.settings.speed).addShape(new testgame.shapes.Circle(0,10,25,'#821616')));
 
-		testgame.entityManager.addEntitiy(setname, "rec1", new testgame.Entity(225, 410, testgame.settings.speed).addShape(new testgame.Rectangle(0,25,50,50,grad2)));
-		testgame.entityManager.addEntitiy(setname, "rec2", new testgame.Entity(350, 345, testgame.settings.speed).addShape(new testgame.Rectangle(0,25,50,50,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "rec1", new testgame.entities.Entity(225, 410, testgame.settings.speed).addShape(new testgame.shapes.Rectangle(0,25,50,50,grad2)));
+		testgame.entityManager.addEntitiy(setname, "rec2", new testgame.entities.Entity(350, 345, testgame.settings.speed).addShape(new testgame.shapes.Rectangle(0,25,50,50,'#821616')));
 
-		testgame.entityManager.addEntitiy(setname, "rrec1", new testgame.Entity(140, 200, testgame.settings.speed).addShape(new testgame.RoundRectangle(0,0,50,50,10,'#821616')));
+		testgame.entityManager.addEntitiy(setname, "rrec1", new testgame.entities.Entity(140, 200, testgame.settings.speed).addShape(new testgame.shapes.RoundRectangle(0,0,50,50,10,'#821616')));
 
-		testgame.entityManager.addEntitiy(setname, "text1", new testgame.Entity(0, 0, testgame.settings.speed).addShape(new testgame.Text(20, 20, "test")));
+		testgame.entityManager.addEntitiy(setname, "text1", new testgame.entities.Entity(0, 0, testgame.settings.speed).addShape(new testgame.shapes.Text(20, 20, "test")));
 		testgame.entityManager.entities.objects.text1.moves = false;
 	},
 
