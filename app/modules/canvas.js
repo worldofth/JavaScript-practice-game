@@ -77,6 +77,7 @@
         this.shapes = null;
         this.shape = null;
         this.grad = null;
+        this.stroke = false;
         this.x = 0;
         this.y = 0;
     };
@@ -177,6 +178,7 @@
                             //the adjusted y coord of the graphics object relative to the Entites position
                             this.y = this.shape.point.y;
                         }
+                        this.stroke = this.shape.stroke;
 
                         switch(this.shape.type){
                             case testgame.shapes.type.TYPE_REC:
@@ -204,8 +206,13 @@
         * @private
         */
         renderRectangle = function(){
-            this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
-            this.bufferContext.fillRect(this.x, this.y, this.shape.width, this.shape.height);
+            if(this.stroke){
+                this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.fillRect(this.x, this.y, this.shape.width, this.shape.height);
+            }else{
+                this.bufferContext.strokeStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.strokeRect(this.x, this.y, this.shape.width, this.shape.height);
+            }
         },
 
         /**
@@ -218,8 +225,13 @@
             this.bufferContext.beginPath();
             this.bufferContext.arc(this.x+this.shape.radius, this.y+this.shape.radius, this.shape.radius, 0, 2*Math.PI);
             this.bufferContext.closePath();
-            this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
-            this.bufferContext.fill();
+            if(this.stroke){
+                this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.fill();
+            }else{
+                this.bufferContext.strokeStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.stroke();
+            }
         },
 
         /**
@@ -251,8 +263,13 @@
             this.bufferContext.quadraticCurveTo(rx, ry, rx, ry + radius);
             this.bufferContext.closePath();
 
-            this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
-            this.bufferContext.fill();
+            if(this.stroke){
+                this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.fill();
+            }else{
+                this.bufferContext.strokeStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.stroke();
+            }
         },
 
         /**
@@ -263,8 +280,13 @@
         */
         renderText = function(){
             this.bufferContext.font = this.shape.font;
-            this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
-            this.bufferContext.fillText(this.shape.textStr,this.x,this.y);
+            if(this.stroke){
+                this.bufferContext.fillStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.fillText(this.shape.textStr,this.x,this.y);
+            }else{
+                this.bufferContext.strokeStyle = processColour.call(this, this.shape.colour, this.x, this.y);
+                this.bufferContext.strokeText(this.shape.textStr,this.x,this.y);
+            }
         };
 
         /**

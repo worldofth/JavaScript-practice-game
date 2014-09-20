@@ -86,6 +86,23 @@
 
     }(RoundRectangle.prototype));
 
+     /**
+    * checks if two rectangles intersect ech other, not icluding rounded corners
+    *
+    * @method testgame.shapes.RoundRectangle#intersects
+    * @param { RoundRectangle } a - first rectangle to test
+    * @param { RoundRectangle } b - second rectangle to test
+    * @return { boolean } if there is an intersection
+    * @static
+    * @public
+    */
+    RoundRectangle.intersects = function (a, b) {
+        if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0){
+            return false;
+        }
+        return !(a.right < b.point.x || a.bottom < b.point.y || a.point.x > b.right || a.point.y > b.bottom);
+    };
+
     /**
     * @exports RoundRectangle to shapes namespace
     */

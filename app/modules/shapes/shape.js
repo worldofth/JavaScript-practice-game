@@ -24,7 +24,7 @@
     * @param { Object|string } colour - the colour of the shapes
     * @param { boolean } relpos - if the position is relative to the entity
     */
-    var Shape = function(x, y, colour, relpos){
+    var Shape = function(x, y, colour, relpos, renders){
         /**
         * @property { Point } - creates a point object based on the x, y position
         */
@@ -39,6 +39,16 @@
         * @property { boolean } - if the position is relative to the entity or it's absolute position on the window
         */
         this.isReleativePos = relpos || true;
+
+        /**
+        * @property { boolean } - if set true, the object renders an outline and is not filled
+        */
+        this.stroke = false;
+
+         /**
+        * @property { boolean } - sets if the particular shape is rendered or not
+        */
+        this.renders = renders || true;
     };
     //constructor
     Shape.prototype.constructor = Shape;
